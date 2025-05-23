@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
@@ -19,6 +18,9 @@ const Header: React.FC = () => {
   const { user, isAuthenticated, isAdmin, logout } = useAuth();
   const { items } = useCart();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+
+  // Calculate total items in cart
+  const totalItems = items.reduce((sum, item) => sum + item.quantity, 0);
 
   return (
     <header className="bg-white shadow">
@@ -47,11 +49,11 @@ const Header: React.FC = () => {
             {isAuthenticated ? (
               <div className="flex items-center space-x-4">
                 <div className="relative">
-                  <Link to="/cart" className="p-2 rounded-full hover:bg-gray-100">
+                  <Link to="/cart" className="p-2 rounded-full hover:bg-gray-100 relative">
                     <ShoppingCart className="h-6 w-6 text-gray-600" />
-                    {items.length > 0 && (
-                      <span className="absolute -top-1 -right-1 bg-blue-600 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
-                        {items.length}
+                    {totalItems > 0 && (
+                      <span className="absolute -top-2 -right-2 bg-blue-600 text-white text-xs rounded-full h-6 w-6 flex items-center justify-center font-medium min-w-[24px]">
+                        {totalItems > 99 ? '99+' : totalItems}
                       </span>
                     )}
                   </Link>
@@ -168,7 +170,7 @@ const Header: React.FC = () => {
                   className="block px-3 py-2 rounded-md text-base font-medium text-gray-600 hover:text-blue-600 hover:bg-gray-100"
                   onClick={() => setIsMobileMenuOpen(false)}
                 >
-                  Cart ({items.length})
+                  Cart ({totalItems})
                 </Link>
                 <button 
                   onClick={() => {
