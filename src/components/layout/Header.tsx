@@ -1,9 +1,11 @@
+
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
 import { useCart } from '@/contexts/CartContext';
 import { Button } from '@/components/ui/button';
 import { ShoppingCart, Menu, User, LogOut, Search } from 'lucide-react';
+import { Badge } from '@/components/ui/badge';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -52,7 +54,7 @@ const Header: React.FC = () => {
                   <Link to="/cart" className="p-2 rounded-full hover:bg-gray-100 relative">
                     <ShoppingCart className="h-6 w-6 text-gray-600" />
                     {totalItems > 0 && (
-                      <span className="absolute -top-2 -right-2 bg-blue-600 text-white text-xs rounded-full h-6 w-6 flex items-center justify-center font-medium min-w-[24px]">
+                      <span className="absolute -top-2 -right-2 bg-red-600 text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center z-10">
                         {totalItems > 99 ? '99+' : totalItems}
                       </span>
                     )}
@@ -167,10 +169,17 @@ const Header: React.FC = () => {
                 </Link>
                 <Link 
                   to="/cart" 
-                  className="block px-3 py-2 rounded-md text-base font-medium text-gray-600 hover:text-blue-600 hover:bg-gray-100"
+                  className="block px-3 py-2 rounded-md text-base font-medium text-gray-600 hover:text-blue-600 hover:bg-gray-100 relative"
                   onClick={() => setIsMobileMenuOpen(false)}
                 >
-                  Cart ({totalItems})
+                  <div className="flex items-center">
+                    <span>Cart</span>
+                    {totalItems > 0 && (
+                      <span className="ml-2 bg-red-600 text-white text-xs rounded-full h-5 w-5 inline-flex items-center justify-center">
+                        {totalItems}
+                      </span>
+                    )}
+                  </div>
                 </Link>
                 <button 
                   onClick={() => {
