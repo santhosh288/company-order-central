@@ -42,7 +42,7 @@ const Index = () => {
 
         <DashboardStats isAdmin={isAdmin} />
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mt-8">
+        <div className="grid grid-cols-1 lg:grid-cols-4 gap-6 mt-8">
           {/* Recent Orders */}
           <div className="lg:col-span-2">
             <RecentOrders 
@@ -67,7 +67,7 @@ const Index = () => {
 
           {/* User's Favorite Items */}
           {!isAdmin && (
-            <div>
+            <div className="lg:col-span-2">
               <PopularItems 
                 items={favoriteItems}
                 title="Your Favorites"
