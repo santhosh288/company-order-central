@@ -30,7 +30,7 @@ const Header: React.FC = () => {
         <div className="flex items-center justify-between h-16">
           <div className="flex items-center">
             <Link to="/" className="flex-shrink-0">
-              <h1 className="text-xl font-bold text-blue-600">OrderPro</h1>
+              <h1 className="text-xl font-bold text-blue-600">LogISA</h1>
             </Link>
             <div className="hidden md:block ml-10">
               <div className="flex items-baseline space-x-4">
