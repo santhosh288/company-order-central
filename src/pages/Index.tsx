@@ -54,7 +54,7 @@ const Index = () => {
 
           {/* Admin Panel */}
           {isAdmin && (
-            <div>
+            <div className="lg:col-span-2">
               <RecentOrders 
                 orders={pendingApprovals} 
                 title="Pending Approvals" 
