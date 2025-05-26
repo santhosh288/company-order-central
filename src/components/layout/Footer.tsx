@@ -60,10 +60,10 @@ const Footer: React.FC = () => {
             <h4 className="text-md font-medium mb-4">Contact</h4>
             <ul className="space-y-2">
               <li className="text-gray-600">
-                Email: support@orderpro.com
+                Email: customerservices@cpg-logistics.com
               </li>
               <li className="text-gray-600">
-                Phone: (555) 123-4567
+                Phone: 01329 245 600
               </li>
             </ul>
           </div>
@@ -71,7 +71,7 @@ const Footer: React.FC = () => {
         
         <div className="border-t border-gray-200 mt-8 pt-6 flex flex-col md:flex-row justify-between items-center">
           <p className="text-gray-600 text-sm">
-            &copy; {new Date().getFullYear()} OrderPro. All rights reserved.
+            &copy; {new Date().getFullYear()} CPG Logistics Ltd. All rights reserved.
           </p>
           <div className="flex space-x-4 mt-4 md:mt-0">
             <a href="#" className="text-gray-400 hover:text-blue-600">

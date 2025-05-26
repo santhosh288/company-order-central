@@ -45,7 +45,7 @@ const PopularItems: React.FC<PopularItemsProps> = ({
             {items.map((item) => (
               <div
                 key={item.id}
-                className="flex space-x-4 p-3 border rounded-lg hover:bg-gray-50 transition-colors"
+                className="flex space-x-4 p-3 border rounded-lg hover:bg-gray-100 transition-colors"
               >
                 <img
                   src={item.image}

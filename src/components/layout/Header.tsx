@@ -30,7 +30,8 @@ const Header: React.FC = () => {
         <div className="flex items-center justify-between h-16">
           <div className="flex items-center">
             <Link to="/" className="flex-shrink-0">
-              <h1 className="text-xl font-bold text-blue-600">LogISA</h1>
+              {/*<div>LogISA</div>*/}
+              <img className="h-16" src="public/LOGISA.png" alt="Logisa Icon"/>
             </Link>
             <div className="hidden md:block ml-10">
               <div className="flex items-baseline space-x-4">
@@ -50,11 +51,15 @@ const Header: React.FC = () => {
           <div className="hidden md:flex items-center space-x-4">
             {isAuthenticated ? (
               <div className="flex items-center space-x-4">
+                <div>
+                  <img className="h-16" src="public/pfizer.png" alt="Customer Logo"/>
+                </div>
                 <div className="relative">
+
                   <Link to="/cart" className="p-2 rounded-full hover:bg-gray-100 relative">
                     <ShoppingCart className="h-6 w-6 text-gray-600" />
                     {totalItems > 0 && (
-                      <span className="absolute -top-2 -right-2 bg-red-600 text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center z-10">
+                      <span className="absolute -right-2 bg-red-600 text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center z-10">
                         {totalItems > 99 ? '99+' : totalItems}
                       </span>
                     )}

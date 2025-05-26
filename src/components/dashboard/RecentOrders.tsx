@@ -59,9 +59,9 @@ const RecentOrders: React.FC<RecentOrdersProps> = ({
             No orders found
           </div>
         ) : (
-          <div className="space-y-4">
+          <div className="space-y-4 ">
             {displayOrders.map((order) => (
-              <div key={order.id} className="flex flex-col sm:flex-row justify-between items-start sm:items-center p-4 border rounded-lg hover:bg-gray-50 transition-colors">
+              <div key={order.id} className="flex flex-col sm:flex-row justify-between items-start sm:items-center p-4 border rounded-lg hover:bg-gray-100 transition-colors">
                 <div className="flex flex-col mb-2 sm:mb-0">
                   <Link to={`/orders/${order.id}`} className="font-medium text-blue-600 hover:underline">
                     {order.id}

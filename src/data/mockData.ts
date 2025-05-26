@@ -27,7 +27,7 @@ export const materials: Material[] = [
     description: 'Black ink ballpoint pens, medium point',
     price: 15.99,
     quantity: 120,
-    image: '/placeholder.svg',
+    image: 'https://cdn.pixabay.com/photo/2020/09/17/13/09/pen-5579144_1280.png',
     groupId: 'g1',
   },
   {
@@ -36,7 +36,7 @@ export const materials: Material[] = [
     description: 'Assorted colors, 3x3 inches',
     price: 9.99,
     quantity: 200,
-    image: '/placeholder.svg',
+    image: 'https://cdn.pixabay.com/photo/2013/07/12/12/17/note-145514_1280.png',
     groupId: 'g1',
   },
   {
@@ -45,7 +45,7 @@ export const materials: Material[] = [
     description: 'Ergonomic design with 2.4GHz wireless technology',
     price: 24.99,
     quantity: 45,
-    image: '/placeholder.svg',
+    image: 'https://cdn.pixabay.com/photo/2012/04/13/19/17/mouse-33336_1280.png',
     groupId: 'g2',
   },
   {
@@ -54,7 +54,7 @@ export const materials: Material[] = [
     description: 'Fast charging and data transfer',
     price: 12.99,
     quantity: 80,
-    image: '/placeholder.svg',
+    image: 'https://cdn.pixabay.com/photo/2013/07/12/19/25/usb-cable-154767_1280.png',
     groupId: 'g2',
   },
   {
@@ -63,7 +63,7 @@ export const materials: Material[] = [
     description: 'Adjustable height and lumbar support',
     price: 149.99,
     quantity: 15,
-    image: '/placeholder.svg',
+    image: 'https://cdn.pixabay.com/photo/2014/04/02/17/01/chair-307694_1280.png',
     groupId: 'g3',
   },
   {
@@ -72,7 +72,7 @@ export const materials: Material[] = [
     description: 'LED desk lamp with adjustable brightness',
     price: 34.99,
     quantity: 30,
-    image: '/placeholder.svg',
+    image: 'https://cdn.pixabay.com/photo/2022/03/03/18/14/desk-lamp-7045824_1280.png',
     groupId: 'g3',
   },
   {
@@ -81,7 +81,7 @@ export const materials: Material[] = [
     description: 'Impact resistant with anti-fog coating',
     price: 19.99,
     quantity: 50,
-    image: '/placeholder.svg',
+    image: 'https://cdn.pixabay.com/photo/2017/12/27/15/14/goggle-3042888_1280.png',
     groupId: 'g4',
   },
   {
@@ -90,7 +90,7 @@ export const materials: Material[] = [
     description: 'ANSI certified with adjustable fit',
     price: 29.99,
     quantity: 25,
-    image: '/placeholder.svg',
+    image: 'https://cdn.pixabay.com/photo/2013/07/13/12/14/hat-159463_1280.png',
     groupId: 'g4',
   },
   {
@@ -99,7 +99,7 @@ export const materials: Material[] = [
     description: 'Industrial strength cleaner for all surfaces',
     price: 22.99,
     quantity: 40,
-    image: '/placeholder.svg',
+    image: 'https://cdn.pixabay.com/photo/2020/06/29/02/49/distilled-water-5351167_1280.png',
     groupId: 'g5',
   },
   {
@@ -108,7 +108,7 @@ export const materials: Material[] = [
     description: 'Reusable cloths for dust-free cleaning',
     price: 17.99,
     quantity: 60,
-    image: '/placeholder.svg',
+    image: 'https://cdn.pixabay.com/photo/2016/04/01/09/58/bathroom-1299704_1280.png',
     groupId: 'g5',
   },
   {
@@ -117,7 +117,7 @@ export const materials: Material[] = [
     description: '8.5 x 11 inch, 20lb, 5000 sheets total',
     price: 45.99,
     quantity: 30,
-    image: '/placeholder.svg',
+    image: 'https://cdn.pixabay.com/photo/2014/12/21/23/56/papers-576385_1280.png',
     groupId: 'g1',
   },
   {
@@ -126,7 +126,7 @@ export const materials: Material[] = [
     description: 'Cherry MX Brown switches with backlight',
     price: 89.99,
     quantity: 0, // Out of stock
-    image: '/placeholder.svg',
+    image: 'https://cdn.pixabay.com/photo/2013/07/13/11/50/computer-158770_1280.png',
     groupId: 'g2',
   },
 ];
