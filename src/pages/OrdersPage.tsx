@@ -30,9 +30,24 @@ import {
   DialogTrigger,
 } from '@/components/ui/dialog';
 import { ScrollArea } from '@/components/ui/scroll-area';
+import {useLocation} from "react-router-dom";
+
 
 const OrdersPage = () => {
+
+
   const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
+
+  const location = useLocation();
+  const { status } = location.state || {}; // Access status safely
+  let filteredOrders = orders;
+  if(status==='pending') {
+    filteredOrders =  orders.filter(order => (order.status === 'pending' || order.status === 'approved'));
+  } else if (status==='completed') {
+    filteredOrders = orders.filter(order => (order.status === 'shipped' || order.status === 'delivered'));
+  }
+  // Filter data based on the status passed
+  //const filteredData = status==='all' ? orders : orders.filter(order => order.status === status);
   
   // Get status badge color
   const getStatusBadge = (status: string) => {
@@ -55,6 +70,7 @@ const OrdersPage = () => {
   };
 
   return (
+
     <Layout requireAuth={true}>
       <div className="container px-4 py-8">
         <div className="mb-8">
@@ -70,7 +86,7 @@ const OrdersPage = () => {
             </CardDescription>
           </CardHeader>
           <CardContent>
-            {orders.length === 0 ? (
+            {filteredOrders.length === 0 ? (
               <div className="text-center py-8">
                 <p className="text-gray-500">You haven't placed any orders yet.</p>
                 <Button className="mt-4">Browse Catalog</Button>
@@ -88,7 +104,7 @@ const OrdersPage = () => {
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {orders.map((order) => (
+                  {filteredOrders.map((order) => (
                     <TableRow key={order.id}>
                       <TableCell className="font-medium">
                         {order.id}
