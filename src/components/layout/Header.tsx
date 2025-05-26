@@ -31,7 +31,7 @@ const Header: React.FC = () => {
           <div className="flex items-center">
             <Link to="/" className="flex-shrink-0">
               {/*<div>LogISA</div>*/}
-              <img className="h-16" src="public/LOGISA.png" alt="Logisa Icon"/>
+              <img className="h-16" src="LOGISA.png" alt="Logisa Icon"/>
             </Link>
             <div className="hidden md:block ml-10">
               <div className="flex items-baseline space-x-4">
@@ -52,7 +52,7 @@ const Header: React.FC = () => {
             {isAuthenticated ? (
               <div className="flex items-center space-x-4">
                 <div>
-                  <img className="h-16" src="public/pfizer.png" alt="Customer Logo"/>
+                  <img className="h-16" src="pfizer.png" alt="Customer Logo"/>
                 </div>
                 <div className="relative">
 
