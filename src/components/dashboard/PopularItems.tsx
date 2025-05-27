@@ -50,7 +50,7 @@ const PopularItems: React.FC<PopularItemsProps> = ({
                 <img
                   src={item.image}
                   alt={item.name}
-                  className="w-16 h-16 object-cover rounded-md"
+                  className="w-16 h-16 object-cover rounded-md" ð
                 />
                 <div className="flex-1">
                   <h4 className="font-medium text-sm">{item.name}</h4>
