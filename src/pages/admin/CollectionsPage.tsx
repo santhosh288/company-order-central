@@ -52,6 +52,8 @@ const CollectionsPage = () => {
         return <Badge variant="outline" className="bg-red-100 text-red-800 border-red-200">Rejected</Badge>;
       case 'collected':
         return <Badge variant="outline" className="bg-purple-100 text-purple-800 border-purple-200">Collected</Badge>;
+      case 'awaiting quote':
+        return <Badge variant="outline" className="bg-green-500 text-red-500 border-red-800-200">Awaiting Quote</Badge>;
       case 'awaiting approval':
         return <Badge variant="outline" className="bg-indigo-100 text-indigo-800 border-indigo-200">Awaiting Approval</Badge>;
       case 'completed':
@@ -110,6 +112,7 @@ const CollectionsPage = () => {
                               <Dialog >
                                 <DialogTrigger asChild>
                                   <Button
+                                      className="hover:bg-blue-900 hover:text-white"
                                       variant="outline"
                                       size="sm"
                                       onClick={() => setSelectedCollection(collection)}>

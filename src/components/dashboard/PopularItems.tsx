@@ -28,7 +28,7 @@ const PopularItems: React.FC<PopularItemsProps> = ({
       <CardHeader className="flex flex-row items-center justify-between">
         <CardTitle>{title}</CardTitle>
         {actionLink && (
-          <Button variant="ghost" size="sm" asChild>
+          <Button  variant="ghost" size="sm" asChild >
             <Link to={actionLink}>
               {actionLabel || 'View All'}
             </Link>
@@ -58,7 +58,8 @@ const PopularItems: React.FC<PopularItemsProps> = ({
                   <div className="flex justify-between items-center mt-2">
                     <span className="font-medium text-blue-600">{formatCurrency(item.price)}</span>
                     {onAddToCart && (
-                      <Button 
+                      <Button
+                        className="hover:bg-blue-800 hover:text-white"
                         size="sm" 
                         variant="outline"
                         disabled={item.quantity <= 0}
