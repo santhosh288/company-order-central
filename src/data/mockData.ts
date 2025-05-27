@@ -373,6 +373,7 @@ export const shipNotifications: ShipNotification[] = [
   {
     id: "PO1234",
     userId: '2',
+    user: users.find(u => u.id === '2'),
     companyId: '1',
     items: [
       {
@@ -399,7 +400,8 @@ export const shipNotifications: ShipNotification[] = [
   },
   {
     id: "PO1235",
-    userId: '2',
+    userId: '4',
+    user: users.find(u => u.id === '4'),
     companyId: '1',
     items: [
       {
@@ -429,6 +431,7 @@ export const shipNotifications: ShipNotification[] = [
   {
     id: "PO1236",
     userId: '2',
+    user: users.find(u => u.id === '2'),
     companyId: '1',
     items: [
       {
