@@ -1,13 +1,13 @@
 
-import { 
-  MaterialGroup, 
-  Material, 
-  User, 
-  Company, 
-  Address, 
+import {
+  MaterialGroup,
+  Material,
+  User,
+  Company,
+  Address,
   Order,
   DeliveryOption,
-  Report
+  Report, ShipNotification
 } from '../types';
 
 // Material Groups
@@ -367,4 +367,98 @@ export const countries = [
   { code: 'FR', name: 'France' },
   { code: 'JP', name: 'Japan' },
   // Add more countries as needed
+];
+
+export const shipNotifications: ShipNotification[] = [
+  {
+    id: "PO1234",
+    userId: '2',
+    companyId: '1',
+    items: [
+      {
+        id:'1',
+        materialId: 'm2',
+        material: materials.find(m => m.id === 'm2')!,
+        quantity: 10,
+        deliveryDate: new Date('2025-05-01'),
+        batchNumber: 'Batch1',
+        receipts: [
+          {
+            id: '1',
+            shipItemId: '1',
+            quantity: 10,
+            receiptDate: new Date('2025-05-03'),
+            batchNumber: 'Batch1',
+            stockStatus: 'unrestricted'
+          }
+        ]
+      }
+    ],
+    status: 'goods received',
+    createdAt: new Date("2025-04-28"),
+  },
+  {
+    id: "PO1235",
+    userId: '2',
+    companyId: '1',
+    items: [
+      {
+        id:'1',
+        materialId: 'm9',
+        material: materials.find(m => m.id === 'm9')!,
+        quantity: 50,
+        deliveryDate: new Date('2025-05-11'),
+        batchNumber: 'Batch-100',
+        receipts: [
+        ]
+      },
+      {
+        id:'2',
+        materialId: 'm6',
+        material: materials.find(m => m.id === 'm6')!,
+        quantity: 50,
+        deliveryDate: new Date('2025-05-11'),
+        batchNumber: 'Batch-200',
+        receipts: [
+        ]
+      }
+    ],
+    status: 'processing',
+    createdAt: new Date("2025-05-10"),
+  },
+  {
+    id: "PO1236",
+    userId: '2',
+    companyId: '1',
+    items: [
+      {
+        id:'1',
+        materialId: 'm4',
+        material: materials.find(m => m.id === 'm4')!,
+        quantity: 100,
+        deliveryDate: new Date('2025-05-07'),
+        batchNumber: 'Batch111',
+        receipts: [
+          {
+            id: '1',
+            shipItemId: '1',
+            quantity: 50,
+            receiptDate: new Date('2025-05-11'),
+            batchNumber: 'Batch111',
+            stockStatus: 'unrestricted'
+          },
+          {
+            id: '2',
+            shipItemId: '1',
+            quantity: 50,
+            receiptDate: new Date('2025-05-12'),
+            batchNumber: 'Batch112',
+            stockStatus: 'blocked'
+          }
+        ]
+      }
+    ],
+    status: 'goods received',
+    createdAt: new Date("2025-05-02"),
+  }
 ];

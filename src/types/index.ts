@@ -82,3 +82,35 @@ export interface Report {
   description: string;
   type: 'order' | 'inventory' | 'user';
 }
+
+export interface ShipNotification {
+  id: string;
+  userId: string;
+  user?: User;
+  companyId: string;
+  items: ShipItem[];
+  status: 'processing' | 'goods received' | 'cancelled';
+  createdAt: Date;
+  approvedById?: string;
+  approvedBy?: User;
+
+}
+
+export interface ShipItem {
+  id: string;
+  materialId: string;
+  material: Material;
+  quantity: number;
+  deliveryDate: Date;
+  batchNumber: string;
+  receipts: GoodsReceipt[];
+}
+
+export interface GoodsReceipt {
+  id: string;
+  shipItemId: string;
+  quantity: number;
+  receiptDate: Date;
+  batchNumber: string;
+  stockStatus: 'unrestricted' | 'blocked' | 'quarantined';
+}
