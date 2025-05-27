@@ -23,16 +23,13 @@ const AdminToolsMenu = () => {
                             <Link to="/admin/reports">Reports</Link>
                         </li>
                         <li className="px-3 py-2 rounded-md text-sm font-medium text-gray-600 hover:text-white hover:bg-blue-600 cursor-pointer">
-                            <Link to="/admin/reports">Upload Order File</Link>
+                            <Link to="/admin/upload-orders">Upload Order File</Link>
                         </li>
                         <li className="px-3 py-2 rounded-md text-sm font-medium text-gray-600 hover:text-white hover:bg-blue-600 cursor-pointer">
-                            <Link to="/admin/reports">ASN / PO</Link>
+                            <Link to="/admin/reports">Ship Notifications (PO)</Link>
                         </li>
                         <li className="px-3 py-2 rounded-md text-sm font-medium text-gray-600 hover:text-white hover:bg-blue-600 cursor-pointer">
-                            <Link to="/admin/reports">Goods Receipt</Link>
-                        </li>
-                        <li className="px-3 py-2 rounded-md text-sm font-medium text-gray-600 hover:text-white hover:bg-blue-600 cursor-pointer">
-                            <Link to="/admin/reports">Arrange Collection</Link>
+                            <Link to="/admin/reports">Collections</Link>
                         </li>
 
                     </ul>

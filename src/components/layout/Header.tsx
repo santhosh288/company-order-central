@@ -42,10 +42,7 @@ const Header: React.FC = () => {
                   {isAdmin && (
                       <>
                         {
-
-
                           <AdminToolsMenu/>
-
                         }
                       </>
                   )}
