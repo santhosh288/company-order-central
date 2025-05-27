@@ -42,6 +42,7 @@ const Header: React.FC = () => {
                   <>
                     <Link to="/admin/orders" className="px-3 py-2 rounded-md text-sm font-medium text-gray-600 hover:text-blue-600">Manage Orders</Link>
                     <Link to="/admin/reports" className="px-3 py-2 rounded-md text-sm font-medium text-gray-600 hover:text-blue-600">Reports</Link>
+                    <Link to="/admin/upload-orders" className="px-3 py-2 rounded-md text-sm font-medium text-gray-600 hover:text-blue-600">Upload Order File</Link>
                   </>
                 )}
               </div>

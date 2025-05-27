@@ -21,6 +21,7 @@ import OrderApprovalPage from "./pages/admin/OrderApprovalPage";
 import ManageOrdersPage from "./pages/admin/ManageOrdersPage";
 import ReportsPage from "./pages/admin/ReportsPage";
 import NotFound from "./pages/NotFound";
+import UploadOrderFilePage from "./pages/admin/UploadOrderFilePage";
 
 const queryClient = new QueryClient();
 
@@ -49,6 +50,7 @@ const App = () => (
               <Route path="/admin/approvals" element={<OrderApprovalPage />} />
               <Route path="/admin/orders" element={<ManageOrdersPage />} />
               <Route path="/admin/reports" element={<ReportsPage />} />
+              <Route path="/admin/upload-orders" element={<UploadOrderFilePage />} />
               
               {/* 404 Not Found */}
               <Route path="*" element={<NotFound />} />
