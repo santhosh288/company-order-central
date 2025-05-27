@@ -403,7 +403,7 @@ export const shipNotifications: ShipNotification[] = [
     companyId: '1',
     items: [
       {
-        id:'1',
+        id:'2',
         materialId: 'm9',
         material: materials.find(m => m.id === 'm9')!,
         quantity: 50,
@@ -413,7 +413,7 @@ export const shipNotifications: ShipNotification[] = [
         ]
       },
       {
-        id:'2',
+        id:'3',
         materialId: 'm6',
         material: materials.find(m => m.id === 'm6')!,
         quantity: 50,
@@ -432,7 +432,7 @@ export const shipNotifications: ShipNotification[] = [
     companyId: '1',
     items: [
       {
-        id:'1',
+        id:'4',
         materialId: 'm4',
         material: materials.find(m => m.id === 'm4')!,
         quantity: 100,
@@ -441,7 +441,7 @@ export const shipNotifications: ShipNotification[] = [
         receipts: [
           {
             id: '1',
-            shipItemId: '1',
+            shipItemId: '4',
             quantity: 50,
             receiptDate: new Date('2025-05-11'),
             batchNumber: 'Batch111',
@@ -449,7 +449,7 @@ export const shipNotifications: ShipNotification[] = [
           },
           {
             id: '2',
-            shipItemId: '1',
+            shipItemId: '4',
             quantity: 50,
             receiptDate: new Date('2025-05-12'),
             batchNumber: 'Batch112',
