@@ -41,34 +41,12 @@ const Header: React.FC = () => {
 
                   {isAdmin && (
                       <>
-                        {/*<DropdownMenu>
-                          <DropdownMenuTrigger asChild>
-                            <div className="flex items-center">
-                              Test
-                            </div>
-                          </DropdownMenuTrigger>
-                          <DropdownMenuContent align="end">
-                            <DropdownMenuLabel>
-                              Admin Tools
-                            </DropdownMenuLabel>
-                            <DropdownMenuSeparator />
-                            <DropdownMenuItem asChild>
-                              <Link to="/admin/orders" className="px-3 py-2 rounded-md text-sm font-medium text-gray-600 hover:text-blue-600">Manage Orders</Link>
-                            </DropdownMenuItem>
-                            <DropdownMenuItem asChild>
-                              <Link to="admin/reports" className="px-3 py-2 rounded-md text-sm font-medium text-gray-600 hover:text-blue-600">Reports</Link>
-                            </DropdownMenuItem>
-                            <DropdownMenuItem onClick={logout}>
-                              <LogOut className="mr-2 h-4 w-4" />
-                              <span>Logout</span>
-                            </DropdownMenuItem>
-                          </DropdownMenuContent>
-                        </DropdownMenu>*/}
+                        {
 
-                        <AdminToolsMenu/>
 
-                        {/*<Link to="/admin/orders" className="px-3 py-2 rounded-md text-sm font-medium text-gray-600 hover:text-blue-600">Manage Orders</Link>
-                        <Link to="/admin/reports" className="px-3 py-2 rounded-md text-sm font-medium text-gray-600 hover:text-blue-600">Reports</Link>*/}
+                          <AdminToolsMenu/>
+
+                        }
                       </>
                   )}
                 </div>
