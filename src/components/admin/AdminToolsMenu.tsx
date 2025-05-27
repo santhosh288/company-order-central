@@ -26,12 +26,11 @@ const AdminToolsMenu = () => {
                             <Link to="/admin/upload-orders">Upload Order File</Link>
                         </li>
                         <li className="px-3 py-2 rounded-md text-sm font-medium text-gray-600 hover:text-white hover:bg-blue-600 cursor-pointer">
-                            <Link to="/admin/reports">Ship Notifications (PO)</Link>
+                            <Link to="/admin/ship-notifications">Ship Notifications (PO)</Link>
                         </li>
                         <li className="px-3 py-2 rounded-md text-sm font-medium text-gray-600 hover:text-white hover:bg-blue-600 cursor-pointer">
-                            <Link to="/admin/reports">Collections</Link>
+                            <Link to="/admin/collections">Collections</Link>
                         </li>
-
                     </ul>
                 </div>
             )}

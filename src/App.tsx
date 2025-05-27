@@ -22,6 +22,8 @@ import ManageOrdersPage from "./pages/admin/ManageOrdersPage";
 import ReportsPage from "./pages/admin/ReportsPage";
 import NotFound from "./pages/NotFound";
 import UploadOrderFilePage from "./pages/admin/UploadOrderFilePage";
+import ShipNotificationsPage from "@/pages/admin/ShipNotificationsPage.tsx";
+import CollectionsPage from "@/pages/admin/CollectionsPage.tsx";
 
 const queryClient = new QueryClient();
 
@@ -51,6 +53,8 @@ const App = () => (
               <Route path="/admin/orders" element={<ManageOrdersPage />} />
               <Route path="/admin/reports" element={<ReportsPage />} />
               <Route path="/admin/upload-orders" element={<UploadOrderFilePage />} />
+              <Route path="/admin/ship-notifications" element={<ShipNotificationsPage />} />
+              <Route path="/admin/collections" element={<CollectionsPage />} />
               
               {/* 404 Not Found */}
               <Route path="*" element={<NotFound />} />

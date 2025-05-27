@@ -12,7 +12,7 @@ import AddressForm from '@/components/checkout/AddressForm.tsx';
 import { useAuth } from '@/contexts/AuthContext.tsx';
 import { useToast } from '@/hooks/use-toast.ts';
 
-const ShipNotificationsPage = () => {
+const CollectionsPage = () => {
   const { user } = useAuth();
   const [userData, setUserData] = useState({
     firstName: user?.firstName || '',
@@ -133,7 +133,7 @@ const ShipNotificationsPage = () => {
     <Layout requireAuth={true}>
       <div className="container px-4 py-8">
         <div className="mb-8">
-          <h1 className="text-3xl font-bold mb-2">Manage Ship Notifications</h1>
+          <h1 className="text-3xl font-bold mb-2">Manage Collections</h1>
           <p className="text-gray-500">View and edit your account information.</p>
         </div>
 
@@ -354,4 +354,4 @@ const ShipNotificationsPage = () => {
   );
 };
 
-export default ShipNotificationsPage;
+export default CollectionsPage;

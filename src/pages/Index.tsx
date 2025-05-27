@@ -36,7 +36,7 @@ const Index = () => {
     <Layout requireAuth={true}>
       <div className="container px-4 py-8">
         <div className="mb-8">
-          <h1 className="text-3xl font-bold mb-2">Dashboard</h1>
+          <h1 className="text-3xl font-bold mb-2">LogISA</h1>
           <p className="text-gray-500">Welcome back! Here's an overview of your activities.</p>
         </div>
 
