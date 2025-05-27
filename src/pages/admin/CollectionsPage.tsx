@@ -1,356 +1,193 @@
 
 import React, { useState } from 'react';
-import Layout from '@/components/layout/Layout.tsx';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card.tsx';
-import { Button } from '@/components/ui/button.tsx';
-import { Label } from '@/components/ui/label.tsx';
-import { Input } from '@/components/ui/input.tsx';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs.tsx';
-import { addresses } from '@/data/mockData.ts';
-import { Address } from '@/types';
-import AddressForm from '@/components/checkout/AddressForm.tsx';
-import { useAuth } from '@/contexts/AuthContext.tsx';
-import { useToast } from '@/hooks/use-toast.ts';
+import Layout from '@/components/layout/Layout';
+import { collections } from '@/data/mockData';
+import { formatDate, formatCurrency } from '@/utils/helpers';
+import { Button } from '@/components/ui/button';
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card';
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '@/components/ui/table';
+import { Badge } from '@/components/ui/badge';
+import { CollectionDetails } from '@/types';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from '@/components/ui/dialog';
+import { ScrollArea } from '@/components/ui/scroll-area';
+import {useLocation} from "react-router-dom";
+
 
 const CollectionsPage = () => {
-  const { user } = useAuth();
-  const [userData, setUserData] = useState({
-    firstName: user?.firstName || '',
-    lastName: user?.lastName || '',
-    email: user?.email || '',
-    phone: user?.phone || '',
-    currentPassword: '',
-    newPassword: '',
-    confirmPassword: '',
-  });
-  
-  const [userAddresses, setUserAddresses] = useState<Address[]>(addresses);
-  const [editingAddressId, setEditingAddressId] = useState<string | null>(null);
-  const [isAddingAddress, setIsAddingAddress] = useState(false);
-  
-  const { toast } = useToast();
 
-  const handleUserDataChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setUserData(prev => ({ ...prev, [name]: value }));
-  };
 
-  const handleSaveProfile = (e: React.FormEvent) => {
-    e.preventDefault();
-    
-    // In a real app, this would update the user profile via an API
-    toast({
-      title: "Ship Notification",
-      description: "Your ship notification has been successfully saved and will be processed soon.",
-    });
-  };
+  const [selectedCollection, setSelectedCollection] = useState<CollectionDetails | null>(null);
 
-  const handlePasswordChange = (e: React.FormEvent) => {
-    e.preventDefault();
-    
-    if (userData.newPassword !== userData.confirmPassword) {
-      toast({
-        title: "Passwords don't match",
-        description: "The new password and confirmation must match",
-        variant: "destructive",
-      });
-      return;
-    }
-    
-    // In a real app, this would update the password via an API
-    setUserData(prev => ({
-      ...prev,
-      currentPassword: '',
-      newPassword: '',
-      confirmPassword: '',
-    }));
-    
-    toast({
-      title: "Password changed",
-      description: "Your password has been successfully changed",
-    });
-  };
+  const location = useLocation();
+  const { status } = location.state || {}; // Access status safely
 
-  const handleEditAddress = (addressId: string) => {
-    setEditingAddressId(addressId);
-    setIsAddingAddress(false);
-  };
-
-  const handleAddressSave = (address: Address) => {
-    if (editingAddressId) {
-      // Update existing address
-      setUserAddresses(prev =>
-        prev.map(addr => (addr.id === editingAddressId ? { ...address, id: addr.id } : addr))
-      );
-      setEditingAddressId(null);
-      toast({
-        title: "Address updated",
-        description: "Your address has been successfully updated",
-      });
-    } else {
-      // Add new address
-      const newAddress = {
-        ...address,
-        id: `address-${Date.now()}`,
-      };
-      setUserAddresses(prev => [...prev, newAddress]);
-      setIsAddingAddress(false);
-      toast({
-        title: "Address added",
-        description: "Your new address has been added",
-      });
+  // Get status badge color
+  const getStatusBadge = (status: string) => {
+    switch (status) {
+      case 'processing':
+        return <Badge variant="outline" className="bg-amber-100 text-amber-800 border-amber-200">Processing</Badge>;
+      case 'approved':
+        return <Badge variant="outline" className="bg-blue-100 text-blue-800 border-blue-200">Approved</Badge>;
+      case 'rejected':
+        return <Badge variant="outline" className="bg-red-100 text-red-800 border-red-200">Rejected</Badge>;
+      case 'collected':
+        return <Badge variant="outline" className="bg-purple-100 text-purple-800 border-purple-200">Collected</Badge>;
+      case 'awaiting approval':
+        return <Badge variant="outline" className="bg-indigo-100 text-indigo-800 border-indigo-200">Awaiting Approval</Badge>;
+      case 'completed':
+        return <Badge variant="outline" className="bg-green-100 text-green-800 border-green-200">Completed</Badge>;
+      case 'cancelled':
+        return <Badge variant="outline" className="bg-red-500 text-green-800 border-red-800-200">Cancelled</Badge>;
+      default:
+        return <Badge variant="outline">Unknown</Badge>;
     }
   };
-
-  const handleDeleteAddress = (addressId: string) => {
-    if (window.confirm('Are you sure you want to delete this address?')) {
-      setUserAddresses(prev => prev.filter(addr => addr.id !== addressId));
-      toast({
-        title: "Address deleted",
-        description: "The address has been removed",
-      });
-    }
-  };
-
-  const handleSetDefaultAddress = (addressId: string) => {
-    setUserAddresses(prev =>
-      prev.map(addr => ({
-        ...addr,
-        isDefault: addr.id === addressId,
-      }))
-    );
-    toast({
-      title: "Default address set",
-      description: "Your default address has been updated",
-    });
-  };
-
-  const editingAddress = editingAddressId
-    ? userAddresses.find(addr => addr.id === editingAddressId)
-    : undefined;
 
   return (
-    <Layout requireAuth={true}>
-      <div className="container px-4 py-8">
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold mb-2">Manage Collections</h1>
-          <p className="text-gray-500">View and edit your account information.</p>
+
+      <Layout requireAuth={true}>
+        <div className="container px-4 py-8">
+          <div className="mb-8">
+            <h1 className="text-3xl font-bold mb-2">Collection Requests</h1>
+            <p className="text-gray-500">View and track all your collection requests.</p>
+          </div>
+
+          <Card>
+            <CardHeader>
+              <CardTitle>Collection Requests</CardTitle>
+              <CardDescription>
+                A complete list of all collection requests placed
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              {collections.length === 0 ? (
+                  <div className="text-center py-8">
+                    <p className="text-gray-500">There is no collection raised yet.</p>
+                  </div>
+              ) : (
+                  <Table>
+                    <TableHeader>
+                      <TableRow>
+                        <TableHead>Collection ID</TableHead>
+                        <TableHead>Collection Date</TableHead>
+                        <TableHead>Status</TableHead>
+                        <TableHead>Quote Requested?</TableHead>
+                        <TableHead>Quoted Price</TableHead>
+                        <TableHead className="text-right">Actions</TableHead>
+                      </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                      {collections.map((collection) => (
+                          <TableRow key={collection.id}>
+                            <TableCell className="font-medium">
+                              {collection.id}
+                            </TableCell>
+                            <TableCell>{formatDate(collection.collectionDate)}</TableCell>
+                            <TableCell>{getStatusBadge(collection.status)}</TableCell>
+                            <TableCell>{collection.requestedQuote?"Yes":"No"}</TableCell>
+                            <TableCell>{collection.price>0?formatCurrency(collection.price):"N/A"}</TableCell>
+                            <TableCell className="text-right">
+                              <Dialog >
+                                <DialogTrigger asChild>
+                                  <Button
+                                      variant="outline"
+                                      size="sm"
+                                      onClick={() => setSelectedCollection(collection)}>
+                                    View Details
+                                  </Button>
+                                </DialogTrigger>
+                                <DialogContent className="max-w-3xl">
+                                  <DialogHeader>
+                                    <DialogTitle>Collection Details</DialogTitle>
+                                    <DialogDescription>
+                                      Collection ID: {selectedCollection?.id} |
+                                      Date: {selectedCollection && formatDate(selectedCollection.createdAt)}
+                                    </DialogDescription>
+                                  </DialogHeader>
+
+                                  {selectedCollection && (
+                                      <div className="mt-4">
+                                        <div className="flex justify-between items-center mb-4">
+                                          <h4 className="font-bold">Status: {getStatusBadge(selectedCollection.status)}</h4>
+                                        </div>
+
+                                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                                          <div>
+                                            <h4 className="font-bold mb-2">Collection Address</h4>
+                                            <p>{selectedCollection.collectionAddress.firstName} {selectedCollection.collectionAddress.lastName}</p>
+                                            <p>{selectedCollection.collectionAddress.addressLine1}</p>
+                                            {selectedCollection.collectionAddress.addressLine2 && (
+                                                <p>{selectedCollection.collectionAddress.addressLine2}</p>
+                                            )}
+                                            <p>
+                                              {selectedCollection.collectionAddress.city},
+                                              {selectedCollection.collectionAddress.district && ` ${selectedCollection.collectionAddress.district},`}
+                                              {' '}
+                                              {selectedCollection.collectionAddress.postalCode}
+                                            </p>
+                                            <p>{selectedCollection.collectionAddress.country}</p>
+                                          </div>
+                                        </div>
+
+                                        <h4 className="font-bold mb-2">Collection Details</h4>
+
+                                        <p className="font-medium">Collection Date:
+                                          {formatDate(selectedCollection.collectionDate)}</p>
+                                        {selectedCollection.actualCollectionDate && (
+                                            <p className="font-medium text-lg">Actual Collection Date:
+                                              formatDate(selectedCollection.actualCollectionDate)</p>
+                                        )}
+
+
+
+                                        <br/>
+                                        <h4 className="font-bold mb-2">Other Details</h4>
+
+                                        <p className="font-medium">Quote Requested: {selectedCollection.requestedQuote?"Yes":"No"}</p>
+                                        {selectedCollection.quoteDate && (
+                                            <div>
+                                              <p className="font-medium">
+                                                Quote Date: {formatDate(selectedCollection.quoteDate)}</p>
+                                              <p className="font-medium">Price: {formatCurrency(selectedCollection.price)}</p>
+                                              <p className="font-medium">
+                                                Quoted by: {selectedCollection.quoteBy?.firstName}&nbsp;{selectedCollection.quoteBy?.lastName}</p>
+                                            </div>
+                                        )}
+
+                                      </div>
+                                  )}
+                                </DialogContent>
+                              </Dialog>
+                            </TableCell>
+                          </TableRow>
+                      ))}
+                    </TableBody>
+                  </Table>
+              )}
+            </CardContent>
+          </Card>
         </div>
-
-        <Tabs defaultValue="personal" className="space-y-6">
-          <TabsList>
-            <TabsTrigger value="personal">Personal Information</TabsTrigger>
-            <TabsTrigger value="password">Change Password</TabsTrigger>
-            <TabsTrigger value="addresses">Delivery Addresses</TabsTrigger>
-          </TabsList>
-
-          {/* Personal Information */}
-          <TabsContent value="personal">
-            <Card>
-              <CardHeader>
-                <CardTitle>Personal Information</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <form onSubmit={handleSaveProfile} className="space-y-4">
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div className="space-y-2">
-                      <Label htmlFor="firstName">First Name</Label>
-                      <Input
-                        id="firstName"
-                        name="firstName"
-                        value={userData.firstName}
-                        onChange={handleUserDataChange}
-                      />
-                    </div>
-                    <div className="space-y-2">
-                      <Label htmlFor="lastName">Last Name</Label>
-                      <Input
-                        id="lastName"
-                        name="lastName"
-                        value={userData.lastName}
-                        onChange={handleUserDataChange}
-                      />
-                    </div>
-                  </div>
-
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div className="space-y-2">
-                      <Label htmlFor="email">Email</Label>
-                      <Input
-                        id="email"
-                        name="email"
-                        type="email"
-                        value={userData.email}
-                        onChange={handleUserDataChange}
-                      />
-                    </div>
-                    <div className="space-y-2">
-                      <Label htmlFor="phone">Phone Number</Label>
-                      <Input
-                        id="phone"
-                        name="phone"
-                        value={userData.phone}
-                        onChange={handleUserDataChange}
-                      />
-                    </div>
-                  </div>
-                  
-                  <div className="flex justify-end">
-                    <Button type="submit">Save Changes</Button>
-                  </div>
-                </form>
-              </CardContent>
-            </Card>
-          </TabsContent>
-
-          {/* Change Password */}
-          <TabsContent value="password">
-            <Card>
-              <CardHeader>
-                <CardTitle>Change Password</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <form onSubmit={handlePasswordChange} className="space-y-4">
-                  <div className="space-y-2">
-                    <Label htmlFor="currentPassword">Current Password</Label>
-                    <Input
-                      id="currentPassword"
-                      name="currentPassword"
-                      type="password"
-                      value={userData.currentPassword}
-                      onChange={handleUserDataChange}
-                    />
-                  </div>
-
-                  <div className="space-y-2">
-                    <Label htmlFor="newPassword">New Password</Label>
-                    <Input
-                      id="newPassword"
-                      name="newPassword"
-                      type="password"
-                      value={userData.newPassword}
-                      onChange={handleUserDataChange}
-                    />
-                  </div>
-
-                  <div className="space-y-2">
-                    <Label htmlFor="confirmPassword">Confirm New Password</Label>
-                    <Input
-                      id="confirmPassword"
-                      name="confirmPassword"
-                      type="password"
-                      value={userData.confirmPassword}
-                      onChange={handleUserDataChange}
-                    />
-                  </div>
-
-                  <div className="flex justify-end">
-                    <Button type="submit">Update Password</Button>
-                  </div>
-                </form>
-              </CardContent>
-            </Card>
-          </TabsContent>
-
-          {/* Delivery Addresses */}
-          <TabsContent value="addresses">
-            <Card>
-              <CardHeader className="flex flex-row items-center justify-between">
-                <CardTitle>Delivery Addresses</CardTitle>
-                {!isAddingAddress && !editingAddressId && (
-                  <Button onClick={() => setIsAddingAddress(true)}>Add New Address</Button>
-                )}
-              </CardHeader>
-              <CardContent>
-                {isAddingAddress ? (
-                  <AddressForm
-                    onSave={handleAddressSave}
-                    hasExistingAddresses={userAddresses.length > 0}
-                    onCancel={() => setIsAddingAddress(false)}
-                  />
-                ) : editingAddressId ? (
-                  <AddressForm
-                    initialAddress={editingAddress}
-                    onSave={handleAddressSave}
-                    hasExistingAddresses={true}
-                    onCancel={() => setEditingAddressId(null)}
-                  />
-                ) : (
-                  <div className="space-y-4">
-                    {userAddresses.length === 0 ? (
-                      <p className="text-center py-4 text-gray-500">
-                        You don't have any saved addresses yet.
-                      </p>
-                    ) : (
-                      userAddresses.map((address) => (
-                        <div
-                          key={address.id}
-                          className={`border rounded-lg p-4 ${
-                            address.isDefault ? 'border-blue-500 bg-blue-50' : 'border-gray-200'
-                          }`}
-                        >
-                          <div className="flex justify-between items-start">
-                            <div>
-                              <p className="font-medium">
-                                {address.firstName} {address.lastName}
-                                {address.isDefault && (
-                                  <span className="ml-2 text-xs bg-blue-100 text-blue-800 py-0.5 px-2 rounded-full">
-                                    Default
-                                  </span>
-                                )}
-                              </p>
-                              <p className="text-sm text-gray-600">{address.addressLine1}</p>
-                              {address.addressLine2 && (
-                                <p className="text-sm text-gray-600">{address.addressLine2}</p>
-                              )}
-                              <p className="text-sm text-gray-600">
-                                {address.city},
-                                {address.district && ` ${address.district},`}
-                                {' '}
-                                {address.postalCode}
-                              </p>
-                              <p className="text-sm text-gray-600">{address.country}</p>
-                            </div>
-
-                            <div className="space-x-2">
-                              <Button
-                                variant="outline"
-                                size="sm"
-                                onClick={() => handleEditAddress(address.id!)}
-                              >
-                                Edit
-                              </Button>
-                              {!address.isDefault && (
-                                <Button
-                                  variant="outline"
-                                  size="sm"
-                                  onClick={() => handleDeleteAddress(address.id!)}
-                                >
-                                  Delete
-                                </Button>
-                              )}
-                              {!address.isDefault && (
-                                <Button
-                                  variant="outline"
-                                  size="sm"
-                                  onClick={() => handleSetDefaultAddress(address.id!)}
-                                >
-                                  Set as Default
-                                </Button>
-                              )}
-                            </div>
-                          </div>
-                        </div>
-                      ))
-                    )}
-                  </div>
-                )}
-              </CardContent>
-            </Card>
-          </TabsContent>
-        </Tabs>
-      </div>
-    </Layout>
+      </Layout>
   );
 };
 

@@ -7,8 +7,9 @@ import {
   Address,
   Order,
   DeliveryOption,
-  Report, ShipNotification
+  Report, ShipNotification, CollectionDetails
 } from '../types';
+import {undefined} from "zod";
 
 // Material Groups
 export const materialGroups: MaterialGroup[] = [
@@ -464,4 +465,85 @@ export const shipNotifications: ShipNotification[] = [
     status: 'goods received',
     createdAt: new Date("2025-05-02"),
   }
+];
+
+export const collections: CollectionDetails[] = [
+  {
+    id: "COL123",
+    actualCollectionDate: null,
+    collectionDate: new Date("2025-05-07"),
+    companyId: "1",
+    createdAt: new Date("2025-05-01"),
+    price: 0,
+    quoteBy: null,
+    quoteDate: null,
+    requestedQuote: true,
+    status: "awaiting quote",
+    user: users.find(u => u.id === '2'),
+    userId: "2",
+    collectionAddress: {
+      addressLine1: "CPG Logistics",
+      addressLine2: "166 Fareham Road",
+      city: "Gosport",
+      country: "United Kingdom",
+      district: "Hamshire",
+      firstName: "Santhosh",
+      id: "1",
+      isDefault: false,
+      lastName: "Murugesan",
+      postalCode: "PO13 0FW"
+    }},
+
+    {
+    id: "COL124",
+    actualCollectionDate: null,
+    collectionDate: new Date("2025-05-10"),
+    companyId: "1",
+    createdAt: new Date("2025-05-04"),
+    price: 0,
+    quoteBy: null,
+    quoteDate: null,
+    requestedQuote: false,
+    status: "completed",
+    user: users.find(u => u.id === '4'),
+    userId: "4",
+    collectionAddress: {
+      addressLine1: "33 Kennet Close",
+      addressLine2: "Westend",
+      city: "Southampton",
+      country: "United Kingdom",
+      district: "Hamshire",
+      firstName: "Suzy",
+      id: "1",
+      isDefault: false,
+      lastName: "Lord",
+      postalCode: "SO18 3LL"
+    }},
+
+  {
+    id: "COL125",
+    actualCollectionDate: null,
+    collectionDate: new Date("2025-05-10"),
+    companyId: "1",
+    createdAt: new Date("2025-05-04"),
+    price: 59.99,
+    quoteBy: users.find(u => u.id === '2'),
+    quoteDate: new Date("2025-05-05"),
+    requestedQuote: true,
+    status: "awaiting approval",
+    user: users.find(u => u.id === '4'),
+    userId: "4",
+    collectionAddress: {
+      addressLine1: "47 The Avenue",
+      addressLine2: "Maybush",
+      city: "Southampton",
+      country: "United Kingdom",
+      district: "Hamshire",
+      firstName: "Suzy",
+      id: "1",
+      isDefault: false,
+      lastName: "Lord",
+      postalCode: "SO16 9RD"
+    }},
+
 ];

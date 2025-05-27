@@ -114,3 +114,20 @@ export interface GoodsReceipt {
   batchNumber: string;
   stockStatus: 'unrestricted' | 'blocked' | 'quarantined';
 }
+
+export interface CollectionDetails {
+  id: string;
+  userId: string;
+  user?: User;
+  companyId: string;
+  status: 'processing' |'awaiting quote' |  'awaiting approval' |'approved' |'rejected' |'collected' | 'completed' | 'cancelled';
+  createdAt: Date;
+  requestedQuote: boolean;
+  collectionDate: Date;
+  price: number;
+  collectionAddress: Address;
+  quoteBy: User;
+  quoteDate: Date;
+  actualCollectionDate: Date;
+
+}
