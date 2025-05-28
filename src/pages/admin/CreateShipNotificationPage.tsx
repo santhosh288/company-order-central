@@ -18,6 +18,7 @@ import { Button } from '@/components/ui/button';
 import { Plus, Trash2 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import Layout from '../../components/layout/Layout';
+import {materials, users} from '@/data/mockData';
 
 export default function CreateShipNotificationPage() {
   const [formData, setFormData] = useState({
@@ -34,8 +35,9 @@ export default function CreateShipNotificationPage() {
   ]);
 
   // Example user/material data (replace with props or fetch)
-  const users = []; // Replace with real users
-  const materials = []; // Replace with real materials
+  //const users = []; // Replace with real users
+  //const materials = ; // Replace with real materials
+  const adminUsers = users.filter(user => user.role==='admin');
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -137,7 +139,7 @@ export default function CreateShipNotificationPage() {
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="none">None</SelectItem>
-                  {users.map((user) => (
+                  {adminUsers.map((user) => (
                     <SelectItem key={user.id} value={user.id}>
                       {user.firstName} {user.lastName}
                     </SelectItem>

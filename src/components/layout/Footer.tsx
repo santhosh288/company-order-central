@@ -1,19 +1,21 @@
 
 import React from 'react';
 import { Link } from 'react-router-dom';
+import {useAuth} from "@/contexts/AuthContext.tsx";
+
 
 const Footer: React.FC = () => {
   return (
     <footer className="bg-gray-100 mt-auto">
       <div className="container mx-auto px-4 py-8">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-5 gap-8">
           <div>
-            <h3 className="text-lg font-semibold mb-4">OrderPro</h3>
+            <h3 className="text-lg font-semibold mb-4">LogISA</h3>
             <p className="text-gray-600">
               Streamlining your company's ordering process with ease.
             </p>
           </div>
-          
+
           <div>
             <h4 className="text-md font-medium mb-4">Quick Links</h4>
             <ul className="space-y-2">
@@ -34,7 +36,7 @@ const Footer: React.FC = () => {
               </li>
             </ul>
           </div>
-          
+
           <div>
             <h4 className="text-md font-medium mb-4">Help & Support</h4>
             <ul className="space-y-2">

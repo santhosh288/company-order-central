@@ -54,7 +54,6 @@ const ShipNotificationPage = () => {
         <CardHeader className="flex flex-row items-center justify-between">
             <CardTitle className="text-2xl font-bold">Ship Notifications</CardTitle>
             <Button onClick={handleCreateNewClick}>
-              <Plus className="h-4 w-4 mr-2" />
               Create New
             </Button>
           </CardHeader>
