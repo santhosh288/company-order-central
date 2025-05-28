@@ -25,6 +25,7 @@ import UploadOrderFilePage from "./pages/admin/UploadOrderFilePage";
 import ShipNotificationsPage from "@/pages/admin/ShipNotificationsPage.tsx";
 import CollectionsPage from "@/pages/admin/CollectionsPage.tsx";
 import CreateShipNotificationPage from "./pages/admin/CreateShipNotificationPage";
+import CreateCollectionPage from "./pages/admin/CreateCollectionPage";
 
 const queryClient = new QueryClient();
 
@@ -57,6 +58,7 @@ const App = () => (
               <Route path="/admin/ship-notifications" element={<ShipNotificationsPage />} />
               <Route path="/admin/ship-notifications/create" element={<CreateShipNotificationPage />} />
               <Route path="/admin/collections" element={<CollectionsPage />} />
+              <Route path="/admin/collections/create" element={<CreateCollectionPage />} />
               
               {/* 404 Not Found */}
               <Route path="*" element={<NotFound />} />

@@ -1,7 +1,8 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import Layout from '@/components/layout/Layout';
-import { collections } from '@/data/mockData';
+import { getCollectionsFromStorage } from '@/utils/localStorage';
 import { formatDate, formatCurrency } from '@/utils/helpers';
 import { Button } from '@/components/ui/button';
 import {
@@ -29,17 +30,18 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog';
-import { ScrollArea } from '@/components/ui/scroll-area';
-import {useLocation} from "react-router-dom";
-
+import { Plus } from 'lucide-react';
 
 const CollectionsPage = () => {
-
-
+  const navigate = useNavigate();
+  const [collections, setCollections] = useState<CollectionDetails[]>([]);
   const [selectedCollection, setSelectedCollection] = useState<CollectionDetails | null>(null);
 
-  const location = useLocation();
-  const { status } = location.state || {}; // Access status safely
+  useEffect(() => {
+    // Load collections from localStorage
+    const storedCollections = getCollectionsFromStorage();
+    setCollections(storedCollections);
+  }, []);
 
   // Get status badge color
   const getStatusBadge = (status: string) => {
@@ -66,131 +68,134 @@ const CollectionsPage = () => {
   };
 
   return (
-
-      <Layout requireAuth={true}>
-        <div className="container px-4 py-8">
-          <div className="mb-8">
+    <Layout requireAuth={true}>
+      <div className="container px-4 py-8">
+        <div className="mb-8 flex justify-between items-center">
+          <div>
             <h1 className="text-3xl font-bold mb-2">Collection Requests</h1>
             <p className="text-gray-500">View and track all your collection requests.</p>
           </div>
-
-          <Card>
-            <CardHeader>
-              <CardTitle>Collection Requests</CardTitle>
-              <CardDescription>
-                A complete list of all collection requests placed
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              {collections.length === 0 ? (
-                  <div className="text-center py-8">
-                    <p className="text-gray-500">There is no collection raised yet.</p>
-                  </div>
-              ) : (
-                  <Table>
-                    <TableHeader>
-                      <TableRow>
-                        <TableHead>Collection ID</TableHead>
-                        <TableHead>Collection Date</TableHead>
-                        <TableHead>Status</TableHead>
-                        <TableHead>Quote Requested?</TableHead>
-                        <TableHead>Quoted Price</TableHead>
-                        <TableHead className="text-right">Actions</TableHead>
-                      </TableRow>
-                    </TableHeader>
-                    <TableBody>
-                      {collections.map((collection) => (
-                          <TableRow key={collection.id}>
-                            <TableCell className="font-medium">
-                              {collection.id}
-                            </TableCell>
-                            <TableCell>{formatDate(collection.collectionDate)}</TableCell>
-                            <TableCell>{getStatusBadge(collection.status)}</TableCell>
-                            <TableCell>{collection.requestedQuote?"Yes":"No"}</TableCell>
-                            <TableCell>{collection.price>0?formatCurrency(collection.price):"N/A"}</TableCell>
-                            <TableCell className="text-right">
-                              <Dialog >
-                                <DialogTrigger asChild>
-                                  <Button
-                                      className="hover:bg-blue-900 hover:text-white"
-                                      variant="outline"
-                                      size="sm"
-                                      onClick={() => setSelectedCollection(collection)}>
-                                    View Details
-                                  </Button>
-                                </DialogTrigger>
-                                <DialogContent className="max-w-3xl">
-                                  <DialogHeader>
-                                    <DialogTitle>Collection Details</DialogTitle>
-                                    <DialogDescription>
-                                      Collection ID: {selectedCollection?.id} |
-                                      Date: {selectedCollection && formatDate(selectedCollection.createdAt)}
-                                    </DialogDescription>
-                                  </DialogHeader>
-
-                                  {selectedCollection && (
-                                      <div className="mt-4">
-                                        <div className="flex justify-between items-center mb-4">
-                                          <h4 className="font-bold">Status: {getStatusBadge(selectedCollection.status)}</h4>
-                                        </div>
-
-                                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-                                          <div>
-                                            <h4 className="font-bold mb-2">Collection Address</h4>
-                                            <p>{selectedCollection.collectionAddress.firstName} {selectedCollection.collectionAddress.lastName}</p>
-                                            <p>{selectedCollection.collectionAddress.addressLine1}</p>
-                                            {selectedCollection.collectionAddress.addressLine2 && (
-                                                <p>{selectedCollection.collectionAddress.addressLine2}</p>
-                                            )}
-                                            <p>
-                                              {selectedCollection.collectionAddress.city},
-                                              {selectedCollection.collectionAddress.district && ` ${selectedCollection.collectionAddress.district},`}
-                                              {' '}
-                                              {selectedCollection.collectionAddress.postalCode}
-                                            </p>
-                                            <p>{selectedCollection.collectionAddress.country}</p>
-                                          </div>
-                                        </div>
-
-                                        <h4 className="font-bold mb-2">Collection Details</h4>
-
-                                        <p className="font-medium">Collection Date:
-                                          {formatDate(selectedCollection.collectionDate)}</p>
-                                        {selectedCollection.actualCollectionDate && (
-                                            <p className="font-medium text-lg">Actual Collection Date:
-                                              formatDate(selectedCollection.actualCollectionDate)</p>
-                                        )}
-
-
-
-                                        <br/>
-                                        <h4 className="font-bold mb-2">Other Details</h4>
-
-                                        <p className="font-medium">Quote Requested: {selectedCollection.requestedQuote?"Yes":"No"}</p>
-                                        {selectedCollection.quoteDate && (
-                                            <div>
-                                              <p className="font-medium">
-                                                Quote Date: {formatDate(selectedCollection.quoteDate)}</p>
-                                              <p className="font-medium">Price: {formatCurrency(selectedCollection.price)}</p>
-                                              <p className="font-medium">
-                                                Quoted by: {selectedCollection.quoteBy?.firstName}&nbsp;{selectedCollection.quoteBy?.lastName}</p>
-                                            </div>
-                                        )}
-
-                                      </div>
-                                  )}
-                                </DialogContent>
-                              </Dialog>
-                            </TableCell>
-                          </TableRow>
-                      ))}
-                    </TableBody>
-                  </Table>
-              )}
-            </CardContent>
-          </Card>
+          <Button onClick={() => navigate('/admin/collections/create')}>
+            <Plus className="h-4 w-4 mr-2" />
+            Create New
+          </Button>
         </div>
-      </Layout>
+
+        <Card>
+          <CardHeader>
+            <CardTitle>Collection Requests</CardTitle>
+            <CardDescription>
+              A complete list of all collection requests placed
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            {collections.length === 0 ? (
+              <div className="text-center py-8">
+                <p className="text-gray-500">There is no collection raised yet.</p>
+              </div>
+            ) : (
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>Collection ID</TableHead>
+                    <TableHead>Collection Date</TableHead>
+                    <TableHead>Status</TableHead>
+                    <TableHead>Quote Requested?</TableHead>
+                    <TableHead>Quoted Price</TableHead>
+                    <TableHead className="text-right">Actions</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {collections.map((collection) => (
+                    <TableRow key={collection.id}>
+                      <TableCell className="font-medium">
+                        {collection.id}
+                      </TableCell>
+                      <TableCell>{formatDate(collection.collectionDate)}</TableCell>
+                      <TableCell>{getStatusBadge(collection.status)}</TableCell>
+                      <TableCell>{collection.requestedQuote?"Yes":"No"}</TableCell>
+                      <TableCell>{collection.price>0?formatCurrency(collection.price):"N/A"}</TableCell>
+                      <TableCell className="text-right">
+                        <Dialog >
+                          <DialogTrigger asChild>
+                            <Button
+                              className="hover:bg-blue-900 hover:text-white"
+                              variant="outline"
+                              size="sm"
+                              onClick={() => setSelectedCollection(collection)}>
+                              View Details
+                            </Button>
+                          </DialogTrigger>
+                          <DialogContent className="max-w-3xl">
+                            <DialogHeader>
+                              <DialogTitle>Collection Details</DialogTitle>
+                              <DialogDescription>
+                                Collection ID: {selectedCollection?.id} |
+                                Date: {selectedCollection && formatDate(selectedCollection.createdAt)}
+                              </DialogDescription>
+                            </DialogHeader>
+
+                            {selectedCollection && (
+                              <div className="mt-4">
+                                <div className="flex justify-between items-center mb-4">
+                                  <h4 className="font-bold">Status: {getStatusBadge(selectedCollection.status)}</h4>
+                                </div>
+
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                                  <div>
+                                    <h4 className="font-bold mb-2">Collection Address</h4>
+                                    <p>{selectedCollection.collectionAddress.firstName} {selectedCollection.collectionAddress.lastName}</p>
+                                    <p>{selectedCollection.collectionAddress.addressLine1}</p>
+                                    {selectedCollection.collectionAddress.addressLine2 && (
+                                      <p>{selectedCollection.collectionAddress.addressLine2}</p>
+                                    )}
+                                    <p>
+                                      {selectedCollection.collectionAddress.city},
+                                      {selectedCollection.collectionAddress.district && ` ${selectedCollection.collectionAddress.district},`}
+                                      {' '}
+                                      {selectedCollection.collectionAddress.postalCode}
+                                    </p>
+                                    <p>{selectedCollection.collectionAddress.country}</p>
+                                  </div>
+                                </div>
+
+                                <h4 className="font-bold mb-2">Collection Details</h4>
+
+                                <p className="font-medium">Collection Date:
+                                  {formatDate(selectedCollection.collectionDate)}</p>
+                                {selectedCollection.actualCollectionDate && (
+                                  <p className="font-medium text-lg">Actual Collection Date:
+                                    formatDate(selectedCollection.actualCollectionDate)</p>
+                                )}
+
+                                <br/>
+                                <h4 className="font-bold mb-2">Other Details</h4>
+
+                                <p className="font-medium">Quote Requested: {selectedCollection.requestedQuote?"Yes":"No"}</p>
+                                {selectedCollection.quoteDate && (
+                                  <div>
+                                    <p className="font-medium">
+                                      Quote Date: {formatDate(selectedCollection.quoteDate)}</p>
+                                    <p className="font-medium">Price: {formatCurrency(selectedCollection.price)}</p>
+                                    <p className="font-medium">
+                                      Quoted by: {selectedCollection.quoteBy?.firstName}&nbsp;{selectedCollection.quoteBy?.lastName}</p>
+                                  </div>
+                                )}
+
+                              </div>
+                            )}
+                          </DialogContent>
+                        </Dialog>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            )}
+          </CardContent>
+        </Card>
+      </div>
+    </Layout>
   );
 };
 
