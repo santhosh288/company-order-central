@@ -1,19 +1,22 @@
-
 import React from 'react';
 import Layout from '@/components/layout/Layout';
 import CartItem from '@/components/cart/CartItem';
+import FreeItem from '@/components/cart/FreeItemProps';
 import { Button } from '@/components/ui/button';
 import { Link, useNavigate } from 'react-router-dom';
 import { useCart } from '@/contexts/CartContext';
 import { formatCurrency } from '@/utils/helpers';
 import { ShoppingCart, AlertCircle } from 'lucide-react';
-import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
+import { materials } from '@/data/mockData';
+import { Alert, AlertDescription } from '@/components/ui/alert';
 
 const Cart = () => {
   const { items, removeFromCart, updateQuantity, clearCart, total } = useCart();
   const navigate = useNavigate();
 
   const isEmpty = items.length === 0;
+  const isValidForFreeItem = total >= 50;
+  const freeItem = materials.find((item) => item.id === 'm8');
 
   return (
     <Layout requireAuth={true}>
@@ -47,6 +50,17 @@ const Cart = () => {
                     onUpdateQuantity={updateQuantity}
                   />
                 ))}
+                
+                {isValidForFreeItem && freeItem && (
+                  <FreeItem
+                    key={`batch-${freeItem.id}`}
+                    item={{
+                      materialId: freeItem.id,
+                      material: freeItem,
+                      quantity: 1
+                    }}
+                  />
+                )}
               </div>
 
               <div className="p-4 border-t flex flex-col md:flex-row justify-between items-start md:items-center">
@@ -70,7 +84,7 @@ const Cart = () => {
                 <Link to="/catalog">Continue Shopping</Link>
               </Button>
 
-              <Alert variant="warning" className="mb-4 md:mb-0 md:mx-4">
+              <Alert variant="default" className="mb-4 md:mb-0 md:mx-4">
                 <AlertCircle className="h-4 w-4" />
                 <AlertDescription>
                   Delivery options will be selected in the next step.
