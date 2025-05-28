@@ -36,6 +36,15 @@ const OrderSummary: React.FC<OrderSummaryProps> = ({ items, deliveryMethod }) =>
                 <p className="font-medium">{formatCurrency(item.material.price * item.quantity)}</p>
               </div>
             ))}
+            { subtotal >= 50 &&
+            <div className="flex justify-between">
+              <div>
+                <p className="font-medium">Hard Hat(Free Item)</p>
+                <p className="text-sm text-gray-500">Qty: 1</p>
+              </div>
+              <p className="font-medium">{formatCurrency(0)}</p>
+            </div>
+            }
           </div>
         </ScrollArea>
 
