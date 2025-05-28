@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Layout from '@/components/layout/Layout';
@@ -20,7 +19,7 @@ const CreateShipNotificationPage = () => {
   const [formData, setFormData] = useState({
     id: '',
     userId: '',
-    status: 'processing' as const,
+    status: 'processing' as 'processing' | 'goods received' | 'cancelled',
   });
 
   const [items, setItems] = useState<Array<{
