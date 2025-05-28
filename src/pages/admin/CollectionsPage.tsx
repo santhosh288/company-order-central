@@ -76,7 +76,6 @@ const CollectionsPage = () => {
             <p className="text-gray-500">View and track all your collection requests.</p>
           </div>
           <Button onClick={() => navigate('/admin/collections/create')}>
-            <Plus className="h-4 w-4 mr-2" />
             Create New
           </Button>
         </div>
@@ -165,7 +164,7 @@ const CollectionsPage = () => {
                                   {formatDate(selectedCollection.collectionDate)}</p>
                                 {selectedCollection.actualCollectionDate && (
                                   <p className="font-medium text-lg">Actual Collection Date:
-                                    formatDate(selectedCollection.actualCollectionDate)</p>
+                                    {formatDate(selectedCollection.actualCollectionDate)}</p>
                                 )}
 
                                 <br/>

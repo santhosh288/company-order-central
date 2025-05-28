@@ -10,16 +10,21 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Checkbox } from '@/components/ui/checkbox';
 import { users } from '@/data/mockData';
 import { CollectionDetails, Address } from '@/types';
-import { addCollectionToStorage } from '@/utils/localStorage';
+import {addCollectionToStorage, getCollectionsFromStorage, getShipNotificationsFromStorage} from '@/utils/localStorage';
 import { useToast } from '@/hooks/use-toast';
+import {useAuth} from "@/contexts/AuthContext.tsx";
 
 const CreateCollectionPage = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
-  
+
+  const storedCollections = getCollectionsFromStorage();
+  const collectionId = storedCollections.length > 0 ?storedCollections.pop().id:1001;
+  const loggedInUser = useAuth().user;
+
   const [formData, setFormData] = useState({
-    id: '',
-    userId: '',
+    id: collectionId,
+    userId: loggedInUser.id,
     status: 'processing' as CollectionDetails['status'],
     requestedQuote: false,
     collectionDate: '',
@@ -61,6 +66,7 @@ const CreateCollectionPage = () => {
 
     // Find user
     const user = users.find(u => u.id === formData.userId);
+
     
     const newCollection: CollectionDetails = {
       id: formData.id,
@@ -73,9 +79,6 @@ const CreateCollectionPage = () => {
       collectionDate: new Date(formData.collectionDate),
       price: formData.price,
       collectionAddress: address,
-      quoteBy: {} as any, // Will be filled when quote is provided
-      quoteDate: {} as any, // Will be filled when quote is provided
-      actualCollectionDate: {} as any, // Will be filled when collection is completed
     };
 
     // Save to localStorage
@@ -89,6 +92,9 @@ const CreateCollectionPage = () => {
     // Navigate back to collections list
     navigate('/admin/collections');
   };
+
+
+
 
   return (
     <Layout requireAuth={true}>
@@ -106,29 +112,12 @@ const CreateCollectionPage = () => {
             <CardContent className="space-y-4">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <Label htmlFor="id">Collection ID *</Label>
-                  <Input
-                    id="id"
-                    value={formData.id}
-                    onChange={(e) => setFormData({...formData, id: e.target.value})}
-                    placeholder="e.g., COL001"
-                    required
-                  />
+                  <Label htmlFor="id">Notification ID</Label>
+                  <Label> {formData.id}</Label>
                 </div>
                 <div>
-                  <Label htmlFor="userId">User *</Label>
-                  <Select value={formData.userId} onValueChange={(value) => setFormData({...formData, userId: value})}>
-                    <SelectTrigger>
-                      <SelectValue placeholder="Select user" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {users.map((user) => (
-                        <SelectItem key={user.id} value={user.id}>
-                          {user.firstName} {user.lastName}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
+                  <Label htmlFor="userId">User : </Label>
+                  <Label>  {loggedInUser.firstName+" "+loggedInUser.lastName} </Label>
                 </div>
               </div>
               
@@ -143,7 +132,17 @@ const CreateCollectionPage = () => {
                     required
                   />
                 </div>
-                <div>
+                <div className="flex items-center space-x-2">
+                  <Checkbox
+                      id="requestedQuote"
+                      checked={formData.requestedQuote}
+                      onCheckedChange={(checked) => {
+                        setFormData({...formData, requestedQuote: checked as boolean, status: 'awaiting quote'})
+                      }}
+                  />
+                  <Label htmlFor="requestedQuote">Request Quote</Label>
+                </div>
+                {/*<div>
                   <Label htmlFor="status">Status</Label>
                   <Select value={formData.status} onValueChange={(value: CollectionDetails['status']) => setFormData({...formData, status: value})}>
                     <SelectTrigger>
@@ -160,19 +159,14 @@ const CreateCollectionPage = () => {
                       <SelectItem value="cancelled">Cancelled</SelectItem>
                     </SelectContent>
                   </Select>
-                </div>
+                </div>*/}
               </div>
 
-              <div className="flex items-center space-x-2">
-                <Checkbox 
-                  id="requestedQuote" 
-                  checked={formData.requestedQuote}
-                  onCheckedChange={(checked) => setFormData({...formData, requestedQuote: checked as boolean})}
-                />
-                <Label htmlFor="requestedQuote">Request Quote</Label>
-              </div>
+              {/*<div className="flex items-center space-x-2">
 
-              {formData.requestedQuote && (
+              </div>*/}
+
+              {/*{formData.requestedQuote && (
                 <div>
                   <Label htmlFor="price">Quoted Price</Label>
                   <Input
@@ -184,7 +178,7 @@ const CreateCollectionPage = () => {
                     placeholder="0.00"
                   />
                 </div>
-              )}
+              )}*/}
             </CardContent>
           </Card>
 

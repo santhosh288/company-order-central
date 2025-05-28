@@ -18,7 +18,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Plus } from 'lucide-react';
 import ShipNotificationDialog from '@/components/ship/ShipNotificationDialog';
 import { formatDate } from '@/utils/helpers';
-import { getShipNotificationsFromStorage } from '@/utils/localStorage';
+import {getShipNotificationsFromStorage} from '@/utils/localStorage';
 
 const ShipNotificationPage = () => {
   const navigate = useNavigate();

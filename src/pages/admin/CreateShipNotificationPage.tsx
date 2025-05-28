@@ -7,19 +7,23 @@ import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Trash2, Plus } from 'lucide-react';
-import { materials, users } from '@/data/mockData';
+import { materials, users, shipNotifications } from '@/data/mockData';
 import { ShipNotification, ShipItem, User, Material } from '@/types';
-import { addShipNotificationToStorage } from '@/utils/localStorage';
+import {addShipNotificationToStorage, getShipNotificationsFromStorage} from '@/utils/localStorage';
 import { useToast } from '@/hooks/use-toast';
+import {useAuth} from "@/contexts/AuthContext.tsx";
+
 
 const CreateShipNotificationPage = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
+
+  const storedNotifications = getShipNotificationsFromStorage();
   
   const [formData, setFormData] = useState({
-    id: '',
-    userId: '',
-    status: 'processing' as 'processing' | 'goods received' | 'cancelled',
+    id: storedNotifications.pop().id + 1,
+    userId: useAuth().user.id,
+    status: 'processing' as 'processing' | 'goods received' | 'cancelled'
   });
 
   const [items, setItems] = useState<Array<{
@@ -40,7 +44,6 @@ const CreateShipNotificationPage = () => {
     setItems([...items, {
       materialId: '',
       quantity: '',
-      deliveryDate: '',
       batchNumber: '',
     }]);
   };
@@ -75,7 +78,7 @@ const CreateShipNotificationPage = () => {
 
     // Validate items
     for (const item of items) {
-      if (!item.materialId || !item.quantity || !item.deliveryDate || !item.batchNumber) {
+      if (!item.materialId || !item.quantity) {
         toast({
           title: "Error",
           description: "Please fill in all item fields",
@@ -119,7 +122,7 @@ const CreateShipNotificationPage = () => {
     // Navigate back to ship notifications list
     navigate('/admin/ship-notifications');
   };
-
+  const loggedInUser = useAuth().user;
   return (
     <Layout>
       <div className="container mx-auto px-4 py-8">
@@ -136,43 +139,22 @@ const CreateShipNotificationPage = () => {
             <CardContent className="space-y-4">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <Label htmlFor="id">Notification ID *</Label>
-                  <Input
-                    id="id"
-                    value={formData.id}
-                    onChange={(e) => setFormData({...formData, id: e.target.value})}
-                    placeholder="e.g., PO1237"
-                    required
-                  />
+                  <Label htmlFor="id">Notification ID</Label>
+                  <Label> {formData.id}</Label>
                 </div>
                 <div>
-                  <Label htmlFor="userId">User *</Label>
-                  <Select value={formData.userId} onValueChange={(value) => setFormData({...formData, userId: value})}>
-                    <SelectTrigger>
-                      <SelectValue placeholder="Select user" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {users.map((user) => (
-                        <SelectItem key={user.id} value={user.id}>
-                          {user.firstName} {user.lastName}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
+                  <Label htmlFor="userId">User : </Label>
+                  <Label>  {loggedInUser.firstName+" "+loggedInUser.lastName} </Label>
                 </div>
               </div>
               <div>
-                <Label htmlFor="status">Status</Label>
-                <Select value={formData.status} onValueChange={(value: 'processing' | 'goods received' | 'cancelled') => setFormData({...formData, status: value})}>
-                  <SelectTrigger>
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="processing">Processing</SelectItem>
-                    <SelectItem value="goods received">Goods Received</SelectItem>
-                    <SelectItem value="cancelled">Cancelled</SelectItem>
-                  </SelectContent>
-                </Select>
+                <Label htmlFor="status">Expected Delivery Date</Label>
+                <Input
+                    type="date"
+                    value={formData.deliveryDate}
+                    onChange={(e) => updateItem(index, 'deliveryDate', e.target.value)}
+                    required
+                />
               </div>
             </CardContent>
           </Card>
@@ -232,22 +214,11 @@ const CreateShipNotificationPage = () => {
                     </div>
                     
                     <div>
-                      <Label>Delivery Date *</Label>
-                      <Input
-                        type="date"
-                        value={item.deliveryDate}
-                        onChange={(e) => updateItem(index, 'deliveryDate', e.target.value)}
-                        required
-                      />
-                    </div>
-                    
-                    <div>
-                      <Label>Batch Number *</Label>
+                      <Label>Batch Number</Label>
                       <Input
                         value={item.batchNumber}
                         onChange={(e) => updateItem(index, 'batchNumber', e.target.value)}
                         placeholder="Enter batch number"
-                        required
                       />
                     </div>
                   </div>

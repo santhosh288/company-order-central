@@ -84,10 +84,11 @@ export interface Report {
 }
 
 export interface ShipNotification {
-  id: string;
+  id: number;
   userId: string;
   user?: User;
   companyId: string;
+  deliveryDate: Date;
   items: ShipItem[];
   status: 'processing' | 'goods received' | 'cancelled';
   createdAt: Date;
@@ -97,18 +98,18 @@ export interface ShipNotification {
 }
 
 export interface ShipItem {
-  id: string;
+  id: number;
+  shipId: number;
   materialId: string;
   material: Material;
   quantity: number;
-  deliveryDate: Date;
   batchNumber: string;
   receipts: GoodsReceipt[];
 }
 
 export interface GoodsReceipt {
-  id: string;
-  shipItemId: string;
+  id: number;
+  shipItemId: number;
   quantity: number;
   receiptDate: Date;
   batchNumber: string;

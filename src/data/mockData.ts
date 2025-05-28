@@ -372,13 +372,14 @@ export const countries = [
 
 export const shipNotifications: ShipNotification[] = [
   {
-    id: "PO1234",
+    id: 1234,
     userId: '2',
     user: users.find(u => u.id === '2'),
     companyId: '1',
     items: [
       {
-        id:'1',
+        id:1,
+        shipId: 1234,
         materialId: 'm2',
         material: materials.find(m => m.id === 'm2')!,
         quantity: 10,
@@ -400,7 +401,7 @@ export const shipNotifications: ShipNotification[] = [
     createdAt: new Date("2025-04-28"),
   },
   {
-    id: "PO1235",
+    id: 1235,
     userId: '4',
     user: users.find(u => u.id === '4'),
     companyId: '1',
@@ -430,7 +431,7 @@ export const shipNotifications: ShipNotification[] = [
     createdAt: new Date("2025-05-10"),
   },
   {
-    id: "PO1236",
+    id: 1236,
     userId: '2',
     user: users.find(u => u.id === '2'),
     companyId: '1',
@@ -469,7 +470,7 @@ export const shipNotifications: ShipNotification[] = [
 
 export const collections: CollectionDetails[] = [
   {
-    id: "COL123",
+    id: "123",
     actualCollectionDate: null,
     collectionDate: new Date("2025-05-07"),
     companyId: "1",
@@ -495,7 +496,7 @@ export const collections: CollectionDetails[] = [
     }},
 
     {
-    id: "COL124",
+    id: "124",
     actualCollectionDate: null,
     collectionDate: new Date("2025-05-10"),
     companyId: "1",
@@ -521,7 +522,7 @@ export const collections: CollectionDetails[] = [
     }},
 
   {
-    id: "COL125",
+    id: "125",
     actualCollectionDate: null,
     collectionDate: new Date("2025-05-10"),
     companyId: "1",
