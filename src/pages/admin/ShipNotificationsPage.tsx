@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Layout from '@/components/layout/Layout';
 import { shipNotifications } from '@/data/mockData';
@@ -18,12 +18,23 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Plus } from 'lucide-react';
 import ShipNotificationDialog from '@/components/ship/ShipNotificationDialog';
 import { formatDate } from '@/utils/helpers';
+import { getShipNotificationsFromStorage } from '@/utils/localStorage';
 
 const ShipNotificationPage = () => {
   const navigate = useNavigate();
-  const [notifications, setNotifications] = useState<ShipNotification[]>(shipNotifications);
+  const [notifications, setNotifications] = useState<ShipNotification[]>([]);
   const [selectedNotification, setSelectedNotification] = useState<ShipNotification | null>(null);
   const [dialogOpen, setDialogOpen] = useState(false);
+
+  useEffect(() => {
+    // Load notifications from localStorage, fallback to mock data if empty
+    const storedNotifications = getShipNotificationsFromStorage();
+    if (storedNotifications.length > 0) {
+      setNotifications(storedNotifications);
+    } else {
+      setNotifications(shipNotifications);
+    }
+  }, []);
 
   const handleViewClick = (notification: ShipNotification) => {
     setSelectedNotification(notification);
@@ -51,7 +62,7 @@ const ShipNotificationPage = () => {
     <Layout>
       <div className="container mx-auto px-4 py-8">
         <Card>
-        <CardHeader className="flex flex-row items-center justify-between">
+          <CardHeader className="flex flex-row items-center justify-between">
             <CardTitle className="text-2xl font-bold">Ship Notifications</CardTitle>
             <Button onClick={handleCreateNewClick}>
               Create New
@@ -70,7 +81,7 @@ const ShipNotificationPage = () => {
                 </TableRow>
               </TableHeader>
               <TableBody>
-              {notifications.map((notification) => (
+                {notifications.map((notification) => (
                   <TableRow key={notification.id}>
                     <TableCell className="font-medium">{notification.id}</TableCell>
                     <TableCell>
@@ -106,7 +117,6 @@ const ShipNotificationPage = () => {
             onOpenChange={setDialogOpen}
           />
         )}
-
       </div>
     </Layout>
   );
