@@ -1,164 +1,172 @@
-import { useState } from 'react';
-import {
-  Card,
-  CardHeader,
-  CardTitle,
-  CardContent,
-} from '@/components/ui/card';
-import {
-  Select,
-  SelectTrigger,
-  SelectValue,
-  SelectContent,
-  SelectItem,
-} from '@/components/ui/select';
+
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import Layout from '@/components/layout/Layout';
+import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Button } from '@/components/ui/button';
-import { Plus, Trash2 } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
-import Layout from '../../components/layout/Layout';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Trash2, Plus } from 'lucide-react';
 import { materials, users } from '@/data/mockData';
+import { ShipNotification, ShipItem, User, Material } from '@/types';
 import { addShipNotificationToStorage } from '@/utils/localStorage';
 import { useToast } from '@/hooks/use-toast';
 
-export default function CreateShipNotificationPage() {
-  const [formData, setFormData] = useState({
-    userId: '',
-    status: '',
-    companyId: '',
-    approvedById: '',
-  });
-
+const CreateShipNotificationPage = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
+  
+  const [formData, setFormData] = useState({
+    id: '',
+    userId: '',
+    status: 'processing' as const,
+  });
 
-  const [items, setItems] = useState([
-    { materialId: '', quantity: 1, deliveryDate: new Date(), batchNumber: '' },
+  const [items, setItems] = useState<Array<{
+    materialId: string;
+    quantity: string;
+    deliveryDate: string;
+    batchNumber: string;
+  }>>([
+    {
+      materialId: '',
+      quantity: '',
+      deliveryDate: '',
+      batchNumber: '',
+    }
   ]);
 
-  const adminUsers = users.filter(user => user.role === 'admin');
+  const addItem = () => {
+    setItems([...items, {
+      materialId: '',
+      quantity: '',
+      deliveryDate: '',
+      batchNumber: '',
+    }]);
+  };
+
+  const removeItem = (index: number) => {
+    if (items.length > 1) {
+      setItems(items.filter((_, i) => i !== index));
+    }
+  };
+
+  const updateItem = (index: number, field: string, value: string) => {
+    const updatedItems = [...items];
+    updatedItems[index] = {
+      ...updatedItems[index],
+      [field]: value
+    };
+    setItems(updatedItems);
+  };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     
-    // Validate form
-    if (!formData.userId || !formData.status || !formData.companyId) {
+    // Validation
+    if (!formData.id || !formData.userId) {
       toast({
-        title: "Validation Error",
-        description: "Please fill in all required fields.",
+        title: "Error",
+        description: "Please fill in all required fields",
         variant: "destructive",
       });
       return;
     }
 
     // Validate items
-    const validItems = items.filter(item => item.materialId && item.batchNumber);
-    if (validItems.length === 0) {
-      toast({
-        title: "Validation Error",
-        description: "Please add at least one valid item.",
-        variant: "destructive",
-      });
-      return;
+    for (const item of items) {
+      if (!item.materialId || !item.quantity || !item.deliveryDate || !item.batchNumber) {
+        toast({
+          title: "Error",
+          description: "Please fill in all item fields",
+          variant: "destructive",
+        });
+        return;
+      }
     }
 
-    // Create ship notification object
-    const shipNotification = {
-      id: `SN-${Date.now()}`,
+    // Find user and create ship notification
+    const user = users.find(u => u.id === formData.userId);
+    
+    const shipItems: ShipItem[] = items.map((item, index) => ({
+      id: String(index + 1),
+      materialId: item.materialId,
+      material: materials.find(m => m.id === item.materialId)!,
+      quantity: parseInt(item.quantity),
+      deliveryDate: new Date(item.deliveryDate),
+      batchNumber: item.batchNumber,
+      receipts: []
+    }));
+
+    const newNotification: ShipNotification = {
+      id: formData.id,
       userId: formData.userId,
-      user: users.find(u => u.id === formData.userId)!,
-      companyId: formData.companyId,
-      status: formData.status as 'processing' | 'goods received' | 'cancelled',
+      user: user,
+      companyId: user?.companyId || '1',
+      items: shipItems,
+      status: formData.status,
       createdAt: new Date(),
-      approvedById: formData.approvedById || undefined,
-      approvedBy: formData.approvedById ? users.find(u => u.id === formData.approvedById)! : undefined,
-      items: validItems.map(item => ({
-        id: `SI-${Date.now()}-${Math.random()}`,
-        materialId: item.materialId,
-        material: materials.find(m => m.id === item.materialId)!,
-        quantity: item.quantity,
-        deliveryDate: item.deliveryDate,
-        batchNumber: item.batchNumber,
-        receipts: [],
-      })),
     };
 
     // Save to localStorage
-    addShipNotificationToStorage(shipNotification);
+    addShipNotificationToStorage(newNotification);
 
     toast({
       title: "Success",
-      description: "Ship notification created successfully!",
+      description: "Ship notification created successfully",
     });
 
-    // Navigate back to ship notifications page
+    // Navigate back to ship notifications list
     navigate('/admin/ship-notifications');
-  };
-
-  const handleAddItem = () => {
-    setItems([
-      ...items,
-      { materialId: '', quantity: 1, deliveryDate: new Date(), batchNumber: '' },
-    ]);
-  };
-
-  const handleItemChange = (index: number, field: string, value: unknown) => {
-    const newItems = [...items];
-    newItems[index][field] = field === 'deliveryDate' ? new Date(value) : value;
-    setItems(newItems);
-  };
-
-  const handleRemoveItem = (index: number) => {
-    const newItems = [...items];
-    newItems.splice(index, 1);
-    setItems(newItems);
   };
 
   return (
     <Layout>
-      <div className="container mx-auto py-10 space-y-6">
-        <div className="space-y-1">
-          <h1 className="text-2xl font-semibold">Create New Ship Notification</h1>
-          <p className="text-muted-foreground">
-            Fill out the form below to create a new shipping notification with items and delivery details.
-          </p>
+      <div className="container mx-auto px-4 py-8">
+        <div className="mb-8">
+          <h1 className="text-3xl font-bold mb-2">Create Ship Notification</h1>
+          <p className="text-gray-500">Create a new ship notification for incoming materials.</p>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-6">
-          {/* General Information */}
           <Card>
             <CardHeader>
-              <CardTitle className="text-lg">General Information</CardTitle>
+              <CardTitle>Notification Details</CardTitle>
             </CardHeader>
-            <CardContent className="grid grid-cols-2 gap-4">
-              <div>
-                <Label htmlFor="userId">User</Label>
-                <Select
-                  value={formData.userId}
-                  onValueChange={(value) => setFormData({ ...formData, userId: value })}
-                >
-                  <SelectTrigger>
-                    <SelectValue placeholder="Select user" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {users.map((user) => (
-                      <SelectItem key={user.id} value={user.id}>
-                        {user.firstName} {user.lastName}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
+            <CardContent className="space-y-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <Label htmlFor="id">Notification ID *</Label>
+                  <Input
+                    id="id"
+                    value={formData.id}
+                    onChange={(e) => setFormData({...formData, id: e.target.value})}
+                    placeholder="e.g., PO1237"
+                    required
+                  />
+                </div>
+                <div>
+                  <Label htmlFor="userId">User *</Label>
+                  <Select value={formData.userId} onValueChange={(value) => setFormData({...formData, userId: value})}>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select user" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {users.map((user) => (
+                        <SelectItem key={user.id} value={user.id}>
+                          {user.firstName} {user.lastName}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
               </div>
-
               <div>
                 <Label htmlFor="status">Status</Label>
-                <Select
-                  value={formData.status}
-                  onValueChange={(value) => setFormData({ ...formData, status: value })}
-                >
+                <Select value={formData.status} onValueChange={(value: 'processing' | 'goods received' | 'cancelled') => setFormData({...formData, status: value})}>
                   <SelectTrigger>
-                    <SelectValue placeholder="Select status" />
+                    <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
                     <SelectItem value="processing">Processing</SelectItem>
@@ -167,137 +175,100 @@ export default function CreateShipNotificationPage() {
                   </SelectContent>
                 </Select>
               </div>
-
-              <div>
-                <Label htmlFor="companyId">Company ID</Label>
-                <Input
-                  id="companyId"
-                  value={formData.companyId}
-                  onChange={(e) => setFormData({ ...formData, companyId: e.target.value })}
-                  required
-                />
-              </div>
-
-              <div>
-                <Label htmlFor="approvedById">Approved By (Optional)</Label>
-                <Select
-                  value={formData.approvedById}
-                  onValueChange={(value) =>
-                    setFormData({ ...formData, approvedById: value === 'none' ? '' : value })
-                  }
-                >
-                  <SelectTrigger>
-                    <SelectValue placeholder="Select approver" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="none">None</SelectItem>
-                    {adminUsers.map((user) => (
-                      <SelectItem key={user.id} value={user.id}>
-                        {user.firstName} {user.lastName}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
             </CardContent>
           </Card>
 
-          {/* Items Section */}
           <Card>
             <CardHeader className="flex flex-row items-center justify-between">
-              <CardTitle className="text-lg">Items</CardTitle>
-              <Button type="button" onClick={handleAddItem} size="sm">
+              <CardTitle>Items</CardTitle>
+              <Button type="button" onClick={addItem} size="sm">
+                <Plus className="h-4 w-4 mr-2" />
                 Add Item
               </Button>
             </CardHeader>
             <CardContent className="space-y-4">
               {items.map((item, index) => (
-                <div
-                  key={index}
-                  className="grid grid-cols-5 gap-4 p-4 border rounded-lg"
-                >
-                  <div>
-                    <Label>Material</Label>
-                    <Select
-                      value={item.materialId}
-                      onValueChange={(value) =>
-                        handleItemChange(index, 'materialId', value)
-                      }
-                    >
-                      <SelectTrigger>
-                        <SelectValue placeholder="Select material" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {materials.map((material) => (
-                          <SelectItem key={material.id} value={material.id}>
-                            {material.name}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
+                <Card key={index} className="p-4">
+                  <div className="flex justify-between items-start mb-4">
+                    <h4 className="font-medium">Item {index + 1}</h4>
+                    {items.length > 1 && (
+                      <Button
+                        type="button"
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => removeItem(index)}
+                      >
+                        <Trash2 className="h-4 w-4" />
+                      </Button>
+                    )}
                   </div>
-
-                  <div>
-                    <Label>Quantity</Label>
-                    <Input
-                      type="number"
-                      min="1"
-                      value={item.quantity}
-                      onChange={(e) =>
-                        handleItemChange(index, 'quantity', parseInt(e.target.value))
-                      }
-                      required
-                    />
+                  
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                      <Label>Material *</Label>
+                      <Select value={item.materialId} onValueChange={(value) => updateItem(index, 'materialId', value)}>
+                        <SelectTrigger>
+                          <SelectValue placeholder="Select material" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {materials.map((material) => (
+                            <SelectItem key={material.id} value={material.id}>
+                              {material.name}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </div>
+                    
+                    <div>
+                      <Label>Quantity *</Label>
+                      <Input
+                        type="number"
+                        value={item.quantity}
+                        onChange={(e) => updateItem(index, 'quantity', e.target.value)}
+                        placeholder="Enter quantity"
+                        min="1"
+                        required
+                      />
+                    </div>
+                    
+                    <div>
+                      <Label>Delivery Date *</Label>
+                      <Input
+                        type="date"
+                        value={item.deliveryDate}
+                        onChange={(e) => updateItem(index, 'deliveryDate', e.target.value)}
+                        required
+                      />
+                    </div>
+                    
+                    <div>
+                      <Label>Batch Number *</Label>
+                      <Input
+                        value={item.batchNumber}
+                        onChange={(e) => updateItem(index, 'batchNumber', e.target.value)}
+                        placeholder="Enter batch number"
+                        required
+                      />
+                    </div>
                   </div>
-
-                  <div>
-                    <Label>Delivery Date</Label>
-                    <Input
-                      type="date"
-                      value={item.deliveryDate.toISOString().split('T')[0]}
-                      onChange={(e) =>
-                        handleItemChange(index, 'deliveryDate', e.target.value)
-                      }
-                      required
-                    />
-                  </div>
-
-                  <div>
-                    <Label>Batch Number</Label>
-                    <Input
-                      value={item.batchNumber}
-                      onChange={(e) =>
-                        handleItemChange(index, 'batchNumber', e.target.value)
-                      }
-                      required
-                    />
-                  </div>
-
-                  <div className="flex items-end">
-                    <Button
-                      type="button"
-                      variant="outline"
-                      size="sm"
-                      onClick={() => handleRemoveItem(index)}
-                      disabled={items.length === 1}
-                    >
-                      <Trash2 className="h-4 w-4" />
-                    </Button>
-                  </div>
-                </div>
+                </Card>
               ))}
             </CardContent>
           </Card>
 
-          {/* Submit Button */}
-          <div className="flex justify-end space-x-2">
+          <div className="flex justify-end space-x-4">
             <Button type="button" variant="outline" onClick={() => navigate('/admin/ship-notifications')}>
               Cancel
             </Button>
-            <Button type="submit">Create Ship Notification</Button>
+            <Button type="submit">
+              Create Notification
+            </Button>
           </div>
         </form>
       </div>
     </Layout>
   );
-}
+};
+
+export default CreateShipNotificationPage;
