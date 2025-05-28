@@ -51,7 +51,7 @@ export default function CreateShipNotificationPage() {
     ]);
   };
 
-  const handleItemChange = (index: number, field: string, value: any) => {
+  const handleItemChange = (index: number, field: string, value: string) => {
     const newItems = [...items];
     newItems[index][field] = field === 'deliveryDate' ? new Date(value) : value;
     setItems(newItems);
@@ -155,7 +155,6 @@ export default function CreateShipNotificationPage() {
           <CardHeader className="flex flex-row items-center justify-between">
             <CardTitle className="text-lg">Items</CardTitle>
             <Button type="button" onClick={handleAddItem} size="sm">
-              <Plus className="h-4 w-4 mr-2" />
               Add Item
             </Button>
           </CardHeader>
