@@ -1,9 +1,11 @@
 
 import { Order, ShipNotification } from '@/types';
+import { orders, shipNotifications } from '@/data/mockData';
 
 const STORAGE_KEYS = {
   ORDERS: 'logisa_orders',
   SHIP_NOTIFICATIONS: 'logisa_ship_notifications',
+  INITIALIZED: 'logisa_initialized',
 } as const;
 
 // Generic localStorage functions
@@ -22,6 +24,24 @@ const setToStorage = <T>(key: string, value: T): void => {
     localStorage.setItem(key, JSON.stringify(value));
   } catch (error) {
     console.error(`Error writing to localStorage for key ${key}:`, error);
+  }
+};
+
+// Initialize localStorage with mock data if not already initialized
+export const initializeLocalStorage = (): void => {
+  const isInitialized = localStorage.getItem(STORAGE_KEYS.INITIALIZED);
+  
+  if (!isInitialized) {
+    console.log('Initializing localStorage with mock data...');
+    
+    // Save mock data to localStorage
+    setToStorage(STORAGE_KEYS.ORDERS, orders);
+    setToStorage(STORAGE_KEYS.SHIP_NOTIFICATIONS, shipNotifications);
+    
+    // Mark as initialized
+    localStorage.setItem(STORAGE_KEYS.INITIALIZED, 'true');
+    
+    console.log('Mock data loaded into localStorage');
   }
 };
 
@@ -77,4 +97,5 @@ export const addShipNotificationToStorage = (notification: ShipNotification): vo
 export const clearAllStorage = (): void => {
   localStorage.removeItem(STORAGE_KEYS.ORDERS);
   localStorage.removeItem(STORAGE_KEYS.SHIP_NOTIFICATIONS);
+  localStorage.removeItem(STORAGE_KEYS.INITIALIZED);
 };
