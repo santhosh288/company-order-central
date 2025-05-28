@@ -51,7 +51,7 @@ export default function CreateShipNotificationPage() {
     ]);
   };
 
-  const handleItemChange = (index: number, field: string, value: string) => {
+  const handleItemChange = (index: number, field: string, value: unknown) => {
     const newItems = [...items];
     newItems[index][field] = field === 'deliveryDate' ? new Date(value) : value;
     setItems(newItems);
