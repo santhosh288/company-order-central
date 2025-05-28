@@ -1,5 +1,4 @@
-
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Layout from '@/components/layout/Layout';
 import { orders } from '@/data/mockData';
 import { formatDate, formatCurrency } from '@/utils/helpers';
@@ -30,24 +29,33 @@ import {
   DialogTrigger,
 } from '@/components/ui/dialog';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import {useLocation} from "react-router-dom";
-
+import { useLocation } from "react-router-dom";
+import { getOrdersFromStorage } from '@/utils/localStorage';
 
 const OrdersPage = () => {
-
-
   const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
+  const [allOrders, setAllOrders] = useState<Order[]>([]);
 
   const location = useLocation();
-  const { status } = location.state || {}; // Access status safely
-  let filteredOrders = orders;
-  if(status==='pending') {
-    filteredOrders =  orders.filter(order => (order.status === 'pending' || order.status === 'approved'));
-  } else if (status==='completed') {
-    filteredOrders = orders.filter(order => (order.status === 'shipped' || order.status === 'delivered'));
-  }
+  const { status } = location.state || {};
+
+  useEffect(() => {
+    // Load orders from localStorage, fallback to mock data if empty
+    const storedOrders = getOrdersFromStorage();
+    if (storedOrders.length > 0) {
+      setAllOrders(storedOrders);
+    } else {
+      setAllOrders(orders);
+    }
+  }, []);
+
   // Filter data based on the status passed
-  //const filteredData = status==='all' ? orders : orders.filter(order => order.status === status);
+  let filteredOrders = allOrders;
+  if (status === 'pending') {
+    filteredOrders = allOrders.filter(order => (order.status === 'pending' || order.status === 'approved'));
+  } else if (status === 'completed') {
+    filteredOrders = allOrders.filter(order => (order.status === 'shipped' || order.status === 'delivered'));
+  }
   
   // Get status badge color
   const getStatusBadge = (status: string) => {
@@ -70,7 +78,6 @@ const OrdersPage = () => {
   };
 
   return (
-
     <Layout requireAuth={true}>
       <div className="container px-4 py-8">
         <div className="mb-8">
