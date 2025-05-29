@@ -378,7 +378,7 @@ export const shipNotifications: ShipNotification[] = [
     companyId: '1',
     items: [
       {
-        id:1,
+        id: 1,
         shipId: 1234,
         materialId: 'm2',
         material: materials.find(m => m.id === 'm2')!,
@@ -387,8 +387,8 @@ export const shipNotifications: ShipNotification[] = [
         batchNumber: 'Batch1',
         receipts: [
           {
-            id: '1',
-            shipItemId: '1',
+            id: 1,
+            shipItemId: 1,
             quantity: 10,
             receiptDate: new Date('2025-05-03'),
             batchNumber: 'Batch1',
@@ -399,6 +399,7 @@ export const shipNotifications: ShipNotification[] = [
     ],
     status: 'goods received',
     createdAt: new Date("2025-04-28"),
+    deliveryDate: new Date
   },
   {
     id: 1235,
@@ -407,28 +408,29 @@ export const shipNotifications: ShipNotification[] = [
     companyId: '1',
     items: [
       {
-        id:'2',
+        id: 2,
         materialId: 'm9',
         material: materials.find(m => m.id === 'm9')!,
         quantity: 50,
         deliveryDate: new Date('2025-05-11'),
         batchNumber: 'Batch-100',
-        receipts: [
-        ]
+        receipts: [],
+        shipId: 0
       },
       {
-        id:'3',
+        id: 3,
         materialId: 'm6',
         material: materials.find(m => m.id === 'm6')!,
         quantity: 50,
         deliveryDate: new Date('2025-05-11'),
         batchNumber: 'Batch-200',
-        receipts: [
-        ]
+        receipts: [],
+        shipId: 0
       }
     ],
     status: 'processing',
     createdAt: new Date("2025-05-10"),
+    deliveryDate: new Date
   },
   {
     id: 1236,
@@ -437,7 +439,7 @@ export const shipNotifications: ShipNotification[] = [
     companyId: '1',
     items: [
       {
-        id:'4',
+        id: 4,
         materialId: 'm4',
         material: materials.find(m => m.id === 'm4')!,
         quantity: 100,
@@ -445,26 +447,28 @@ export const shipNotifications: ShipNotification[] = [
         batchNumber: 'Batch111',
         receipts: [
           {
-            id: '1',
-            shipItemId: '4',
+            id: 1,
+            shipItemId: 4,
             quantity: 50,
             receiptDate: new Date('2025-05-11'),
             batchNumber: 'Batch111',
             stockStatus: 'unrestricted'
           },
           {
-            id: '2',
-            shipItemId: '4',
+            id: 2,
+            shipItemId: 4,
             quantity: 50,
             receiptDate: new Date('2025-05-12'),
             batchNumber: 'Batch112',
             stockStatus: 'blocked'
           }
-        ]
+        ],
+        shipId: 0
       }
     ],
     status: 'goods received',
     createdAt: new Date("2025-05-02"),
+    deliveryDate: new Date
   }
 ];
 
