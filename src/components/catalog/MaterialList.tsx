@@ -37,7 +37,7 @@ const MaterialList: React.FC<MaterialListProps> = ({ materials, onAddToCart }) =
                 <img
                   src={material.image}
                   alt={material.name}
-                  className="rounded-md w-full h-40 object-cover"
+                  className="transition-transform duration-300 hover:scale-105 rounded-md w-full h-40 object-cover"
                 />
               </div>
               
