@@ -16,7 +16,8 @@ const Cart = () => {
 
   const isEmpty = items.length === 0;
   const isValidForFreeItem = total >= 50;
-  const freeItem = materials.find((item) => item.id === 'm8');
+  const F50_FREE_ITEM_ID = 'm8';
+  const freeItem = materials.find((item) => item.id === F50_FREE_ITEM_ID);
 
   return (
     <Layout requireAuth={true}>
