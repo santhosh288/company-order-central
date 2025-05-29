@@ -35,27 +35,27 @@ const Index = () => {
   return (
     <Layout requireAuth={true}>
       <div className="space-y-8">
-        {/* Welcome Header with Glassmorphism */}
+        {/* Welcome Header */}
         <div className="text-center space-y-4 mb-12">
-          <div className="glass-card p-8 max-w-4xl mx-auto glow-blue">
-            <h1 className="text-5xl font-bold mb-4 bg-gradient-to-r from-white to-blue-100 bg-clip-text text-transparent">
+          <div className="bg-card border rounded-lg p-8 max-w-4xl mx-auto">
+            <h1 className="text-5xl font-bold mb-4 text-foreground">
               Welcome to LogISA
             </h1>
-            <p className="text-xl text-white/80 max-w-2xl mx-auto">
+            <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
               Your intelligent logistics and supply management platform. Streamline your operations with style and efficiency.
             </p>
           </div>
         </div>
 
-        {/* Dashboard Stats with enhanced styling */}
-        <div className="animate-fade-in" style={{ animationDelay: '0.2s' }}>
+        {/* Dashboard Stats */}
+        <div>
           <DashboardStats isAdmin={isAdmin} />
         </div>
 
-        {/* Main Content Grid with staggered animations */}
+        {/* Main Content Grid */}
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
           {/* Recent Orders */}
-          <div className="lg:col-span-2 animate-fade-in" style={{ animationDelay: '0.4s' }}>
+          <div className="lg:col-span-2">
             <RecentOrders 
               orders={userOrders} 
               title={isAdmin ? "Recent Company Orders" : "Your Recent Orders"} 
@@ -64,7 +64,7 @@ const Index = () => {
           </div>
 
           {/* Admin Panel or User Favorites */}
-          <div className="lg:col-span-2 animate-fade-in" style={{ animationDelay: '0.6s' }}>
+          <div className="lg:col-span-2">
             {isAdmin ? (
               <RecentOrders 
                 orders={pendingApprovals} 
@@ -86,7 +86,7 @@ const Index = () => {
 
         {/* Popular and New Items */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-          <div className="animate-fade-in" style={{ animationDelay: '0.8s' }}>
+          <div>
             <PopularItems 
               items={popularItems}
               title="Popular Items"
@@ -97,7 +97,7 @@ const Index = () => {
             />
           </div>
             
-          <div className="animate-fade-in" style={{ animationDelay: '1s' }}>
+          <div>
             <PopularItems 
               items={newItems}
               title="New Items"
