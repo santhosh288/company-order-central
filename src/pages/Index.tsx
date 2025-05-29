@@ -34,17 +34,28 @@ const Index = () => {
 
   return (
     <Layout requireAuth={true}>
-      <div className="container px-4 py-8">
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold mb-2">LogISA</h1>
-          <p className="text-gray-500">Welcome back! Here's an overview of your activities.</p>
+      <div className="space-y-8">
+        {/* Welcome Header with Glassmorphism */}
+        <div className="text-center space-y-4 mb-12">
+          <div className="glass-card p-8 max-w-4xl mx-auto glow-blue">
+            <h1 className="text-5xl font-bold mb-4 bg-gradient-to-r from-white to-blue-100 bg-clip-text text-transparent">
+              Welcome to LogISA
+            </h1>
+            <p className="text-xl text-white/80 max-w-2xl mx-auto">
+              Your intelligent logistics and supply management platform. Streamline your operations with style and efficiency.
+            </p>
+          </div>
         </div>
 
-        <DashboardStats isAdmin={isAdmin} />
+        {/* Dashboard Stats with enhanced styling */}
+        <div className="animate-fade-in" style={{ animationDelay: '0.2s' }}>
+          <DashboardStats isAdmin={isAdmin} />
+        </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-4 gap-6 mt-8">
+        {/* Main Content Grid with staggered animations */}
+        <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
           {/* Recent Orders */}
-          <div className="lg:col-span-2">
+          <div className="lg:col-span-2 animate-fade-in" style={{ animationDelay: '0.4s' }}>
             <RecentOrders 
               orders={userOrders} 
               title={isAdmin ? "Recent Company Orders" : "Your Recent Orders"} 
@@ -52,9 +63,9 @@ const Index = () => {
             />
           </div>
 
-          {/* Admin Panel */}
-          {isAdmin && (
-            <div className="lg:col-span-2">
+          {/* Admin Panel or User Favorites */}
+          <div className="lg:col-span-2 animate-fade-in" style={{ animationDelay: '0.6s' }}>
+            {isAdmin ? (
               <RecentOrders 
                 orders={pendingApprovals} 
                 title="Pending Approvals" 
@@ -62,42 +73,40 @@ const Index = () => {
                 actionLabel="View All Pending"
                 limit={3}
               />
-            </div>
-          )}
-
-          {/* User's Favorite Items */}
-          {!isAdmin && (
-            <div className="lg:col-span-2">
+            ) : (
               <PopularItems 
                 items={favoriteItems}
                 title="Your Favorites"
                 emptyMessage="You haven't ordered anything yet"
                 onAddToCart={handleAddToCart}
               />
-            </div>
-          )}
+            )}
+          </div>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-8">
-          {/* Most Ordered Items */}
-          <PopularItems 
-            items={popularItems}
-            title="Popular Items"
-            emptyMessage="No popular items found"
-            actionLink="/catalog"
-            actionLabel="Browse Catalog"
-            onAddToCart={handleAddToCart}
-          />
+        {/* Popular and New Items */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+          <div className="animate-fade-in" style={{ animationDelay: '0.8s' }}>
+            <PopularItems 
+              items={popularItems}
+              title="Popular Items"
+              emptyMessage="No popular items found"
+              actionLink="/catalog"
+              actionLabel="Browse Catalog"
+              onAddToCart={handleAddToCart}
+            />
+          </div>
             
-          {/* New Items */}
-          <PopularItems 
-            items={newItems}
-            title="New Items"
-            emptyMessage="No new items available"
-            actionLink="/catalog"
-            actionLabel="Browse Catalog"
-            onAddToCart={handleAddToCart}
-          />
+          <div className="animate-fade-in" style={{ animationDelay: '1s' }}>
+            <PopularItems 
+              items={newItems}
+              title="New Items"
+              emptyMessage="No new items available"
+              actionLink="/catalog"
+              actionLabel="Browse Catalog"
+              onAddToCart={handleAddToCart}
+            />
+          </div>
         </div>
       </div>
     </Layout>

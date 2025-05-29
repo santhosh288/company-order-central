@@ -2,77 +2,73 @@
 import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Link } from 'react-router-dom';
-import { formatCurrency } from '@/utils/helpers';
+import { Plus, ArrowRight } from 'lucide-react';
 import { Material } from '@/types';
+import { Link } from 'react-router-dom';
 
 interface PopularItemsProps {
   items: Material[];
   title: string;
   emptyMessage: string;
-  actionLabel?: string;
   actionLink?: string;
+  actionLabel?: string;
   onAddToCart?: (material: Material) => void;
+  limit?: number;
 }
 
 const PopularItems: React.FC<PopularItemsProps> = ({
   items,
   title,
   emptyMessage,
-  actionLabel,
   actionLink,
-  onAddToCart
+  actionLabel,
+  onAddToCart,
+  limit
 }) => {
+  const displayItems = limit ? items.slice(0, limit) : items;
+
   return (
-    <Card>
-      <CardHeader className="flex flex-row items-center justify-between">
-        <CardTitle>{title}</CardTitle>
-        {actionLink && (
-          <Button  variant="ghost" size="sm" asChild >
-            <Link to={actionLink}>
-              {actionLabel || 'View All'}
-            </Link>
-          </Button>
+    <Card className="h-full bg-gradient-to-br from-white/80 to-blue-50/50 backdrop-blur-sm border-blue-100/50 shadow-lg hover:shadow-xl transition-all duration-300">
+      <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-3">
+        <CardTitle className="text-lg font-semibold text-gray-800">{title}</CardTitle>
+        {actionLink && actionLabel && (
+          <Link to={actionLink}>
+            <Button variant="ghost" size="sm" className="text-blue-600 hover:text-blue-700 hover:bg-blue-50">
+              {actionLabel}
+              <ArrowRight className="ml-1 h-4 w-4" />
+            </Button>
+          </Link>
         )}
       </CardHeader>
-      <CardContent>
-        {items.length === 0 ? (
-          <div className="text-center py-6 text-gray-500">
-            {emptyMessage}
-          </div>
+      <CardContent className="space-y-3">
+        {displayItems.length === 0 ? (
+          <p className="text-sm text-gray-500 text-center py-8">{emptyMessage}</p>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {items.map((item) => (
-              <div
-                key={item.id}
-                className="flex space-x-4 p-3 border rounded-lg hover:bg-gray-100 transition-colors"
-              >
+          displayItems.map((item) => (
+            <div key={item.id} className="flex items-center justify-between p-3 bg-white/70 rounded-lg border border-gray-100/50 hover:bg-white/90 hover:shadow-md transition-all duration-200 hover:-translate-y-0.5">
+              <div className="flex items-center space-x-3">
                 <img
                   src={item.image}
                   alt={item.name}
-                  className="w-16 h-16 object-cover rounded-md"
+                  className="w-12 h-12 object-cover rounded-lg border border-gray-200"
                 />
-                <div className="flex-1">
-                  <h4 className="font-medium text-sm">{item.name}</h4>
-                  <p className="text-sm text-gray-500 line-clamp-1">{item.description}</p>
-                  <div className="flex justify-between items-center mt-2">
-                    <span className="font-medium text-blue-600">{formatCurrency(item.price)}</span>
-                    {onAddToCart && (
-                      <Button
-                        className="hover:bg-blue-800 hover:text-white"
-                        size="sm" 
-                        variant="outline"
-                        disabled={item.quantity <= 0}
-                        onClick={() => onAddToCart(item)}
-                      >
-                        {item.quantity <= 0 ? 'Out of stock' : 'Add to Cart'}
-                      </Button>
-                    )}
-                  </div>
+                <div>
+                  <p className="text-sm font-medium text-gray-900">{item.name}</p>
+                  <p className="text-xs text-gray-500">£{item.price.toFixed(2)}</p>
                 </div>
               </div>
-            ))}
-          </div>
+              {onAddToCart && (
+                <Button
+                  size="sm"
+                  variant="ghost"
+                  onClick={() => onAddToCart(item)}
+                  className="h-8 w-8 p-0 text-blue-600 hover:text-blue-700 hover:bg-blue-50"
+                >
+                  <Plus className="h-4 w-4" />
+                </Button>
+              )}
+            </div>
+          ))
         )}
       </CardContent>
     </Card>
