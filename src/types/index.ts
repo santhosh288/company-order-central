@@ -105,6 +105,7 @@ export interface ShipItem {
   quantity: number;
   batchNumber: string;
   receipts: GoodsReceipt[];
+  deliveryDate: Date;
 }
 
 export interface GoodsReceipt {

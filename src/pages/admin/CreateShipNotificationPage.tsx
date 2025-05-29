@@ -13,17 +13,18 @@ import {addShipNotificationToStorage, getShipNotificationsFromStorage} from '@/u
 import { useToast } from '@/hooks/use-toast';
 import {useAuth} from "@/contexts/AuthContext.tsx";
 
-
 const CreateShipNotificationPage = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
+  const loggedInUser = useAuth().user;
 
   const storedNotifications = getShipNotificationsFromStorage();
   
   const [formData, setFormData] = useState({
     id: storedNotifications.pop().id + 1,
     userId: useAuth().user.id,
-    status: 'processing' as 'processing' | 'goods received' | 'cancelled'
+    status: 'processing' as 'processing' | 'goods received' | 'cancelled', 
+    deliveryDate: ''
   });
 
   const [items, setItems] = useState<Array<{
@@ -45,6 +46,7 @@ const CreateShipNotificationPage = () => {
       materialId: '',
       quantity: '',
       batchNumber: '',
+      deliveryDate: ''
     }]);
   };
 
@@ -92,7 +94,8 @@ const CreateShipNotificationPage = () => {
     const user = users.find(u => u.id === formData.userId);
     
     const shipItems: ShipItem[] = items.map((item, index) => ({
-      id: String(index + 1),
+      id: index + 1,
+      shipId: formData.id,
       materialId: item.materialId,
       material: materials.find(m => m.id === item.materialId)!,
       quantity: parseInt(item.quantity),
@@ -109,6 +112,7 @@ const CreateShipNotificationPage = () => {
       items: shipItems,
       status: formData.status,
       createdAt: new Date(),
+      deliveryDate: new Date()
     };
 
     // Save to localStorage
@@ -122,7 +126,7 @@ const CreateShipNotificationPage = () => {
     // Navigate back to ship notifications list
     navigate('/admin/ship-notifications');
   };
-  const loggedInUser = useAuth().user;
+
   return (
     <Layout>
       <div className="container mx-auto px-4 py-8">
@@ -148,11 +152,11 @@ const CreateShipNotificationPage = () => {
                 </div>
               </div>
               <div>
-                <Label htmlFor="status">Expected Delivery Date</Label>
+                <Label htmlFor="deliveryDate">Expected Delivery Date</Label>
                 <Input
                     type="date"
                     value={formData.deliveryDate}
-                    onChange={(e) => updateItem(index, 'deliveryDate', e.target.value)}
+                    onChange={(e) => setFormData({...formData, deliveryDate: e.target.value})}
                     required
                 />
               </div>
