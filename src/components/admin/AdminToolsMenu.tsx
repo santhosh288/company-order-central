@@ -17,7 +17,7 @@ const AdminToolsMenu = () => {
                 <div className="absolute mt-2 w-48 bg-white border rounded-md shadow-lg z-50">
                     <ul className="py-2">
                         <li className="px-3 py-2 rounded-md text-sm font-medium text-gray-600 hover:text-white hover:bg-blue-600 cursor-pointer">
-                            <Link to="/admin/orders">Manage Orders</Link>
+                                <Link to="/admin/orders">Manage Orders</Link>
                         </li>
                         <li className="px-3 py-2 rounded-md text-sm font-medium text-gray-600 hover:text-white hover:bg-blue-600 cursor-pointer">
                             <Link to="/admin/reports">Reports</Link>

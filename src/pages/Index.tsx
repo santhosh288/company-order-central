@@ -8,6 +8,7 @@ import { orders, materials } from '@/data/mockData';
 import { useAuth } from '@/contexts/AuthContext';
 import { useCart } from '@/contexts/CartContext';
 import { Material } from '@/types';
+import {Link} from "react-router-dom";
 
 const Index = () => {
   const { isAuthenticated, isAdmin } = useAuth();
@@ -36,16 +37,27 @@ const Index = () => {
     <Layout requireAuth={true}>
       <div className="space-y-8">
         {/* Welcome Header */}
-        <div className="text-center space-y-4 mb-12">
-          <div className="bg-card border rounded-lg p-8 max-w-4xl mx-auto">
-            <h1 className="text-5xl font-bold mb-4 text-foreground">
+        <div className="text-center space-y-4 mb-12 ">
+          <div className="bg-card border rounded-lg p-8 max-w-4xl mx-auto
+                            bg-gradient-to-tr from-sky-900 to-blue-300">
+            <h1 className="text-5xl font-bold mb-4 text-foreground text-blue-900">
               Welcome to LogISA
             </h1>
-            <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
+            <p className="text-xl text-muted-foreground max-w-2xl mx-auto text-white">
               Your intelligent logistics and supply management platform. Streamline your operations with style and efficiency.
-            </p>
+            </p><br/>
+
+              <a className="m-2 rounded-md bg-sky-900 hover:bg-sky-500 p-3 text-blue-100">
+                <Link to="catalog">View Catalog</Link>
+              </a>
+
+              <a className="m-2 rounded-md bg-gray-100 text-gray-800 hover:bg-sky-900 hover:text-blue-100 p-3 ">
+                <Link to="profile">My Profile</Link>
+              </a>
+
           </div>
         </div>
+
 
         {/* Dashboard Stats */}
         <div>
@@ -56,9 +68,9 @@ const Index = () => {
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
           {/* Recent Orders */}
           <div className="lg:col-span-2">
-            <RecentOrders 
-              orders={userOrders} 
-              title={isAdmin ? "Recent Company Orders" : "Your Recent Orders"} 
+            <RecentOrders
+              orders={userOrders}
+              title={isAdmin ? "Recent Company Orders" : "Your Recent Orders"}
               actionLink={isAdmin ? "/admin/orders" : "/orders"}
             />
           </div>
@@ -66,15 +78,15 @@ const Index = () => {
           {/* Admin Panel or User Favorites */}
           <div className="lg:col-span-2">
             {isAdmin ? (
-              <RecentOrders 
-                orders={pendingApprovals} 
-                title="Pending Approvals" 
+              <RecentOrders
+                orders={pendingApprovals}
+                title="Pending Approvals"
                 actionLink="/admin/approvals"
                 actionLabel="View All Pending"
                 limit={3}
               />
             ) : (
-              <PopularItems 
+              <PopularItems
                 items={favoriteItems}
                 title="Your Favorites"
                 emptyMessage="You haven't ordered anything yet"
@@ -87,7 +99,7 @@ const Index = () => {
         {/* Popular and New Items */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
           <div>
-            <PopularItems 
+            <PopularItems
               items={popularItems}
               title="Popular Items"
               emptyMessage="No popular items found"
@@ -96,9 +108,9 @@ const Index = () => {
               onAddToCart={handleAddToCart}
             />
           </div>
-            
+
           <div>
-            <PopularItems 
+            <PopularItems
               items={newItems}
               title="New Items"
               emptyMessage="No new items available"

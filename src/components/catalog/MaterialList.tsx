@@ -32,12 +32,12 @@ const MaterialList: React.FC<MaterialListProps> = ({ materials, onAddToCart }) =
       {materials.map(material => (
         <Card key={material.id} className="card-hover">
           <CardContent className="p-4">
-            <div className="flex flex-col h-full">
+            <div className="flex flex-col h-full hover:scale-105 transition-transform duration-300">
               <div className="relative pb-3/4 mb-4">
                 <img
                   src={material.image}
                   alt={material.name}
-                  className="transition-transform duration-300 hover:scale-105 rounded-md w-full h-40 object-cover"
+                  className="rounded-md w-full h-40 object-cover"
                 />
               </div>
               
