@@ -1,5 +1,6 @@
 
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { formatCurrency } from '@/utils/helpers';
@@ -12,6 +13,8 @@ interface MaterialListProps {
 }
 
 const MaterialList: React.FC<MaterialListProps> = ({ materials, onAddToCart }) => {
+  const navigate = useNavigate();
+  
   // State to track quantity for each material
   const [quantities, setQuantities] = React.useState<Record<string, number>>(
     materials.reduce((acc, material) => {
@@ -27,21 +30,34 @@ const MaterialList: React.FC<MaterialListProps> = ({ materials, onAddToCart }) =
     }
   };
 
+  const handleCardClick = (materialId: string) => {
+    navigate(`/material/${materialId}`);
+  };
+
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
       {materials.map(material => (
         <Card key={material.id} className="card-hover">
           <CardContent className="p-4">
-            <div className="flex flex-col h-full hover:scale-105 transition-transform duration-300">
-              <div className="relative pb-3/4 mb-4">
-                <img
-                  src={material.image}
-                  alt={material.name}
-                  className="rounded-md w-full h-40 object-cover"
-                />
+            <div className="flex flex-col h-full">
+              {/* Clickable image and title area */}
+              <div 
+                className="cursor-pointer hover:scale-105 transition-transform duration-300"
+                onClick={() => handleCardClick(material.id)}
+              >
+                <div className="relative pb-3/4 mb-4">
+                  <img
+                    src={material.image}
+                    alt={material.name}
+                    className="rounded-md w-full h-40 object-cover"
+                  />
+                </div>
+                
+                <h3 className="text-lg font-medium hover:text-blue-600 transition-colors">
+                  {material.name}
+                </h3>
               </div>
               
-              <h3 className="text-lg font-medium">{material.name}</h3>
               <p className="text-sm text-gray-500 mb-2 flex-grow">{material.description}</p>
               
               <div className="mt-auto">

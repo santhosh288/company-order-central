@@ -1,4 +1,3 @@
-
 export type UserRole = 'admin' | 'user';
 
 export interface User {
@@ -21,9 +20,13 @@ export interface Material {
   id: string;
   name: string;
   description: string;
+  detailedDescription?: string;
   price: number;
   quantity: number;
   image: string;
+  images?: string[];
+  specifications?: Record<string, string>;
+  pdfUrl?: string;
   groupId: string;
 }
 
@@ -128,8 +131,7 @@ export interface CollectionDetails {
   collectionDate: Date;
   price: number;
   collectionAddress: Address;
-  quoteBy: User;
-  quoteDate: Date;
-  actualCollectionDate: Date;
-
+  quoteBy?: User;
+  quoteDate?: Date;
+  actualCollectionDate?: Date;
 }
