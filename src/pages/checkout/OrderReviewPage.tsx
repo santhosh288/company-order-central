@@ -1,5 +1,5 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import Layout from '@/components/layout/Layout';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -7,11 +7,12 @@ import { useNavigate } from 'react-router-dom';
 import { useCart } from '@/contexts/CartContext';
 import OrderSummary from '@/components/checkout/OrderSummary';
 import DeliveryOptions from '@/components/checkout/DeliveryOptions';
+import PaymentButton from '@/components/checkout/PaymentButton';
 import { deliveryOptions } from '@/data/mockData';
-import { formatAddress } from '@/utils/helpers';
+import { formatAddress, getDeliveryOption } from '@/utils/helpers';
 import { useToast } from '@/hooks/use-toast';
 import { Alert, AlertDescription } from '@/components/ui/alert';
-import { AlertCircle } from 'lucide-react';
+import { AlertCircle, Shield } from 'lucide-react';
 
 const OrderReviewPage = () => {
   const { 
@@ -19,10 +20,13 @@ const OrderReviewPage = () => {
     selectedAddress, 
     deliveryMethod, 
     setDeliveryMethod, 
-    clearCart 
+    clearCart,
+    total
   } = useCart();
   const navigate = useNavigate();
   const { toast } = useToast();
+  const [paymentCompleted, setPaymentCompleted] = useState(false);
+  const [paymentId, setPaymentId] = useState<string | null>(null);
 
   // If cart is empty or address is not selected, redirect to appropriate page
   React.useEffect(() => {
@@ -33,24 +37,33 @@ const OrderReviewPage = () => {
     }
   }, [items, selectedAddress, navigate]);
 
-  const handlePlaceOrder = () => {
-    if (!deliveryMethod) {
-      toast({
-        title: "Delivery method required",
-        description: "Please select a delivery method before placing your order.",
-        variant: "destructive"
-      });
-      return;
-    }
+  const deliveryPrice = deliveryMethod ? getDeliveryOption(deliveryMethod).price : 0;
+  const finalTotal = total + deliveryPrice;
+
+  const handlePaymentSuccess = (id: string) => {
+    setPaymentCompleted(true);
+    setPaymentId(id);
     
-    // In a real app, this would submit the order to the backend
-    // For this demo, just clear the cart and navigate to confirmation
-    
+    toast({
+      title: "Payment Successful!",
+      description: "Your payment has been processed. Placing your order...",
+    });
+
+    // Automatically place order after successful payment
+    setTimeout(() => {
+      handlePlaceOrder(id);
+    }, 1000);
+  };
+
+  const handlePlaceOrder = (paymentId: string) => {
     // Generate order ID for demo
     const orderId = `ORD-${Math.floor(100000 + Math.random() * 900000)}`;
     
+    // In a real app, you would submit the order to the backend with payment confirmation
+    console.log('Order placed with payment ID:', paymentId);
+    
     // Redirect to confirmation page with the order ID
-    navigate(`/checkout/confirmation?orderId=${orderId}`);
+    navigate(`/checkout/confirmation?orderId=${orderId}&paymentId=${paymentId}`);
   };
 
   const handleCancel = () => {
@@ -59,6 +72,8 @@ const OrderReviewPage = () => {
       navigate('/');
     }
   };
+
+  const isReadyForPayment = deliveryMethod && selectedAddress && !paymentCompleted;
 
   if (!selectedAddress) {
     return null; // Will redirect in the useEffect
@@ -69,7 +84,7 @@ const OrderReviewPage = () => {
       <div className="container px-4 py-8 max-w-4xl mx-auto">
         <div className="mb-8">
           <h1 className="text-3xl font-bold mb-2">Review Your Order</h1>
-          <p className="text-gray-500">Please review your order details before proceeding.</p>
+          <p className="text-gray-500">Please review your order details and complete payment.</p>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -78,9 +93,11 @@ const OrderReviewPage = () => {
             <Card>
               <CardHeader className="flex flex-row items-center justify-between">
                 <CardTitle>Delivery Address</CardTitle>
-                <Button variant="outline" size="sm" onClick={() => navigate('/checkout/address')}>
-                  Change
-                </Button>
+                {!paymentCompleted && (
+                  <Button variant="outline" size="sm" onClick={() => navigate('/checkout/address')}>
+                    Change
+                  </Button>
+                )}
               </CardHeader>
               <CardContent>
                 <div>
@@ -99,14 +116,63 @@ const OrderReviewPage = () => {
                 <DeliveryOptions
                   options={deliveryOptions}
                   selectedMethod={deliveryMethod}
-                  onSelectMethod={setDeliveryMethod}
+                  onSelectMethod={paymentCompleted ? () => {} : setDeliveryMethod}
                 />
               </CardContent>
             </Card>
 
-            {/* Place Order Button */}
+            {/* Payment Section */}
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center">
+                  <Shield className="h-5 w-5 mr-2" />
+                  Payment
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                {paymentCompleted ? (
+                  <div className="bg-green-50 border border-green-200 rounded-lg p-4">
+                    <div className="flex items-center">
+                      <div className="w-8 h-8 bg-green-100 rounded-full flex items-center justify-center mr-3">
+                        <Shield className="h-4 w-4 text-green-600" />
+                      </div>
+                      <div>
+                        <p className="font-medium text-green-800">Payment Completed</p>
+                        <p className="text-sm text-green-600">Payment ID: {paymentId}</p>
+                      </div>
+                    </div>
+                  </div>
+                ) : (
+                  <div className="space-y-4">
+                    <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                      <p className="text-sm text-blue-700">
+                        <Shield className="h-4 w-4 inline mr-1" />
+                        Your payment is secured with industry-standard encryption.
+                      </p>
+                    </div>
+                    
+                    <PaymentButton
+                      total={finalTotal}
+                      onPaymentSuccess={handlePaymentSuccess}
+                      disabled={!isReadyForPayment}
+                    />
+                    
+                    {!deliveryMethod && (
+                      <Alert>
+                        <AlertCircle className="h-4 w-4" />
+                        <AlertDescription>
+                          Please select a delivery method before proceeding to payment.
+                        </AlertDescription>
+                      </Alert>
+                    )}
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+
+            {/* Action Buttons */}
             <div className="flex flex-col sm:flex-row sm:justify-between space-y-4 sm:space-y-0">
-              <Button variant="outline" onClick={handleCancel}>
+              <Button variant="outline" onClick={handleCancel} disabled={paymentCompleted}>
                 Cancel Order
               </Button>
               
@@ -114,23 +180,12 @@ const OrderReviewPage = () => {
                 <Button 
                   variant="outline" 
                   onClick={() => navigate('/checkout/address')}
+                  disabled={paymentCompleted}
                 >
                   Back
                 </Button>
-                <Button onClick={handlePlaceOrder}>
-                  Place Order
-                </Button>
               </div>
             </div>
-
-            {!deliveryMethod && (
-              <Alert variant="warning">
-                <AlertCircle className="h-4 w-4" />
-                <AlertDescription>
-                  Please select a delivery method before placing your order.
-                </AlertDescription>
-              </Alert>
-            )}
           </div>
 
           {/* Order Summary */}
